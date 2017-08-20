@@ -14,7 +14,7 @@ import environ
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 ROOT_DIR = environ.Path(__file__) - 3
-APPS_DIR = ROOT_DIR.path('Acre')
+APPS_DIR = ROOT_DIR.path('acre')
 
 env = environ.Env()
 # This section added from an update to standards in CookieCutter Django to ensure no errors are encountered at runserver/migrations
@@ -53,6 +53,7 @@ THIRD_PARTY_APPS = (
 )
 
 LOCAL_APPS = (
+    'datasource',
 )
 
 INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + LOCAL_APPS
@@ -67,7 +68,7 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
-ROOT_URLCONF = 'Acre.urls'
+ROOT_URLCONF = 'acre.urls'
 
 TEMPLATES = [
     {
@@ -85,7 +86,7 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = 'Acre.wsgi.application'
+WSGI_APPLICATION = 'acre.wsgi.application'
 
 
 # Database

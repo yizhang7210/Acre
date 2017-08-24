@@ -6,10 +6,11 @@
 import http.client
 import json
 import os
+import urllib
+from enum import Enum
 
 # Internal imports
-from .models.candles import Candle
-from .models.instruments import Instrument
+from .models import candles, instruments
 
 # Account Details.
 APP_DIR = os.path.dirname(os.path.realpath(__file__))
@@ -20,6 +21,10 @@ GAME_TOKEN = ACCOUNT_INFO.get('Token-Game')
 
 TRADE_URL = "api-fxtrade.oanda.com"
 TRADE_TOKEN = ACCOUNT_INFO.get('Token-Trade')
+
+
+class Granularity(Enum):
+    DAILY = 'D'
 
 
 class OHLC:
@@ -99,11 +104,19 @@ class OandaConnection:
             Returns:
                 candles: list of OandaCandle's. See OandaCandle for details.
         """
-        date_suffix = 'T00:00:00Z'
-        url = ("/v3/instruments/{0}/candles?from={1}&to={2}&"
-               "price=BA&granularity=D&dailyAlignment=17&"
-               "alignmentTimezone=America%2FNew_York"). \
-            format(instrument, start_date + date_suffix, end_date + date_suffix)
+        date_suffix = "T00:00:00Z"
+        query_params = {
+            'from': start_date + date_suffix,
+            'to': end_date + date_suffix,
+            'price': 'BA',
+            'granularity': Granularity.DAILY.value,
+            'dailyAlignment': 17,
+            'alignmentTimezone': 'America/New_York',
+        }
+        url = ("/v3/instruments/{0}/candles?{1}").format(
+            instrument,
+            urllib.parse.urlencode(query_params)
+        )
 
         self.conn.request("GET", url, "", self.headers)
         response = self.conn.getresponse()
@@ -116,10 +129,10 @@ class OandaConnection:
         return candles
 
 
-def oanda_candle_to_db_candle(instrument, granularity, oanda_candle):
-    db_candle = Candle()
+def map_candle_to_db(oanda_candle, instrument, granularity):
+    db_candle = candles.get_empty()
 
-    db_candle.instrument = Instrument.objects.get(name=instrument)
+    db_candle.instrument = instruments.get_instrument_by_name(instrument)
     db_candle.granularity = granularity
     db_candle.start_time = oanda_candle.time
     db_candle.volume = oanda_candle.volume

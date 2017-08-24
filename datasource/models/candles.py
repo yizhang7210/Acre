@@ -25,3 +25,23 @@ class Candle(models.Model):
 
     class Meta:
         unique_together = (('instrument', 'start_time', 'granularity'),)
+
+
+def get_empty():
+    return Candle()
+
+
+def get_last(instrument, granularity):
+    candles = Candle.objects.filter(
+        instrument=instrument,
+        granularity=granularity
+    ).order_by('-start_time')
+
+    if(len(candles) > 0):
+        return candles[0]
+    else:
+        return None
+
+
+def insert_many(candles):
+    Candle.objects.bulk_create(candles)

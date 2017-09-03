@@ -31,6 +31,10 @@ def get_empty():
     return Candle()
 
 
+def get_all(sortBy):
+    return Candle.objects.all().order_by(*sortBy)
+
+
 def get_last(instrument, granularity):
     candles = Candle.objects.filter(
         instrument=instrument,

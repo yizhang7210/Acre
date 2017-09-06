@@ -1,8 +1,8 @@
 from unittest import TestCase
 from unittest.mock import patch
 
-from .. import oanda
-from ..models import instruments
+from datasource import oanda
+from datasource.models import instruments
 
 
 class OandaTest(TestCase):

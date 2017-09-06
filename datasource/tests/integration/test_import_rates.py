@@ -2,8 +2,8 @@ from unittest.mock import patch
 
 from django.test import TestCase
 
-from .. import oanda, rates
-from ..models import candles, instruments
+from datasource import oanda, rates
+from datasource.models import candles, instruments
 
 
 class RatesImportTest(TestCase):

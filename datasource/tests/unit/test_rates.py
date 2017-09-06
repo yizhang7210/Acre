@@ -2,12 +2,12 @@ import datetime
 from unittest import TestCase
 from unittest.mock import patch
 
-from .. import rates
-from ..models import candles
+from datasource import rates
+from datasource.models import candles
 
 
 class RatesTest(TestCase):
-    def test_test_start_date(self):
+    def test_start_date(self):
         # Given
         mock_candle = candles.Candle()
         mock_candle.start_time = datetime.datetime(2017, 5, 3)

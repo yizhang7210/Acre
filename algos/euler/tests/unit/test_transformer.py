@@ -91,16 +91,18 @@ class TransformerTest(TestCase):
         np.testing.assert_almost_equal(sample.features, expected_fs, decimal=2)
         self.assertEqual(sample.target, 0)
 
-    def test_start_date(self):
+    def test_start_time(self):
         t = Transformer()
         # Given
         mock_sample = ts.TrainingSample()
         mock_sample.date = datetime.date(2017, 5, 3)
 
         # When - Then
+        expected = datetime.datetime(2017, 5, 2)
         with patch.object(ts, 'get_last', return_value=mock_sample):
-            self.assertEqual(t.get_start_date('DOES NOT MATTER'), '2017-05-02')
+            self.assertEqual(t.get_start_time('DOES NOT MATTER'), expected)
 
         # When - Then
+        expected = datetime.datetime(2005, 1, 1)
         with patch.object(ts, 'get_last', return_value=None):
-            self.assertEqual(t.get_start_date('DOES NOT MATTER'), '2005-01-01')
+            self.assertEqual(t.get_start_time('DOES NOT MATTER'), expected)

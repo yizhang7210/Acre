@@ -14,14 +14,14 @@ class RatesTest(TestCase):
 
         # When
         with patch.object(candles, 'get_last', return_value=mock_candle):
-            start_date = rates.get_start_date('DOES NOT MATTER')
+            start_date = rates.get_start_date_str('DOES NOT MATTER')
 
         # Then
         self.assertEqual(start_date, '2017-05-05')
 
         # When
         with patch.object(candles, 'get_last', return_value=candles.Candle()):
-            start_date = rates.get_start_date('DOES NOT MATTER')
+            start_date = rates.get_start_date_str('DOES NOT MATTER')
 
         # Then
         self.assertEqual(start_date, '2005-01-02')

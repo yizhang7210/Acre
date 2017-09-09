@@ -11,7 +11,7 @@ from . import oanda
 from .models import candles, instruments
 
 
-def get_start_date(instrument):
+def get_start_date_str(instrument):
     last_candle = candles.get_last(instrument, oanda.Granularity.DAILY.value)
     last_date = last_candle.start_time
     if last_date is None:
@@ -22,15 +22,15 @@ def get_start_date(instrument):
         return str((last_date + datetime.timedelta(2)).date())
 
 
-def get_end_date():
+def get_end_date_str():
     return str(datetime.date.today() - datetime.timedelta(1))
 
 
 def import_daily_candles(oConn):
     all_candles = []
     for instrument in instruments.get_all():
-        start_date = get_start_date(instrument)
-        end_date = get_end_date()
+        start_date = get_start_date_str(instrument)
+        end_date = get_end_date_str()
 
         ocs = oConn.fetch_daily_candles(instrument.name, start_date, end_date)
         all_candles += [oanda.map_candle_to_db(

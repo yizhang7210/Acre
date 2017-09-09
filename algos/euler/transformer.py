@@ -38,20 +38,21 @@ class Transformer:
             target=self.get_profitable_change(candle_next)
         )
 
-    def get_start_date(self, instrument):
+    def get_start_time(self, instrument):
         last_sample = ts.get_last(instrument)
         if last_sample is None:
-            return '2005-01-01'
+            return datetime.datetime(2005, 1, 1)
         else:
-            return str(last_sample.date - datetime.timedelta(1))
+            start_date = last_sample.date - datetime.timedelta(1)
+            return datetime.datetime.combine(start_date, datetime.time())
 
     def run(self):
         all_new_samples = []
         for instrument in instruments.get_all():
-            start_date = self.get_start_date(instrument)
+            start_time = self.get_start_time(instrument)
             new_candles = candles.get_candles(
                 instrument=instrument,
-                start=start_date,
+                start=start_time,
                 sortBy='start_time'
             )
             for i in range(len(new_candles) - 1):

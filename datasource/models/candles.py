@@ -1,3 +1,4 @@
+import pytz
 from django.db import models
 
 from .instruments import Instrument
@@ -48,6 +49,9 @@ def get_one(**kwargs):
         kwargs['close_ask'] = ask.get('c')
         del kwargs['ask']
 
+    if 'start_time' in kwargs:
+        kwargs['start_time'] = add_timezone(kwargs.get('start_time'))
+
     return Candle(**kwargs)
 
 
@@ -60,7 +64,8 @@ def get_candles(**kwargs):
     if 'instrument' in kwargs:
         candles = candles.filter(instrument=kwargs.get('instrument'))
     if 'start' in kwargs:
-        candles = candles.filter(start_time__gte=kwargs.get('start'))
+        start_time = add_timezone(kwargs.get('start'))
+        candles = candles.filter(start_time__gte=start_time)
     if 'sortBy' in kwargs:
         candles = candles.order_by(kwargs.get('sortBy'))
 
@@ -77,6 +82,13 @@ def get_last(instrument, granularity):
         return candles[0]
     else:
         return None
+
+
+def add_timezone(time_record):
+    if time_record.tzname() is None:
+        return time_record.replace(tzinfo=pytz.timezone('America/New_York'))
+    else:
+        return time_record
 
 
 def insert_many(candles):

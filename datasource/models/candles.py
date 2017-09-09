@@ -31,8 +31,40 @@ def get_empty():
     return Candle()
 
 
+def get_one(**kwargs):
+    if 'bid' in kwargs:
+        bid = kwargs.get('bid')
+        kwargs['open_bid'] = bid.get('o')
+        kwargs['high_bid'] = bid.get('h')
+        kwargs['low_bid'] = bid.get('l')
+        kwargs['close_bid'] = bid.get('c')
+        del kwargs['bid']
+
+    if 'ask' in kwargs:
+        ask = kwargs.get('ask')
+        kwargs['open_ask'] = ask.get('o')
+        kwargs['high_ask'] = ask.get('h')
+        kwargs['low_ask'] = ask.get('l')
+        kwargs['close_ask'] = ask.get('c')
+        del kwargs['ask']
+
+    return Candle(**kwargs)
+
+
 def get_all(sortBy):
     return Candle.objects.all().order_by(*sortBy)
+
+
+def get_candles(**kwargs):
+    candles = Candle.objects.all()
+    if 'instrument' in kwargs:
+        candles = candles.filter(instrument=kwargs.get('instrument'))
+    if 'start' in kwargs:
+        candles = candles.filter(start_time__gte=kwargs.get('start'))
+    if 'sortBy' in kwargs:
+        candles = candles.order_by(kwargs.get('sortBy'))
+
+    return candles
 
 
 def get_last(instrument, granularity):

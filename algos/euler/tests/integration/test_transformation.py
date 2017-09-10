@@ -1,10 +1,11 @@
+# pylint: disable=missing-docstring
 import datetime
 from decimal import Decimal
 
 from django.test import TestCase
 
+from algos.euler import transformer as tsfr
 from algos.euler.models import training_samples as ts
-from algos.euler.transformer import Transformer
 from datasource.models import candles, instruments
 
 TWO_PLACES = Decimal('0.01')
@@ -15,17 +16,17 @@ class TransformationTest(TestCase):
     @classmethod
     def setUpClass(cls):
         super(TransformationTest, cls).setUpClass()
-        cls.setUpInstruments()
-        cls.setUpCandles()
-        cls.setUpSamples()
+        cls.set_up_instruments()
+        cls.set_up_candles()
+        cls.set_up_samples()
 
     @classmethod
-    def setUpInstruments(cls):
+    def set_up_instruments(cls):
         cls.eur_usd = instruments.Instrument(name='EUR_USD', multiplier=10000)
         cls.eur_usd.save()
 
     @classmethod
-    def setUpCandles(cls):
+    def set_up_candles(cls):
         # EUR_USD 1
         bid = {'o': 1.29288, 'h': 1.29945, 'l': 1.29045, 'c': 1.29455}
         ask = {'o': 1.29343, 'h': 1.29967, 'l': 1.29063, 'c': 1.29563}
@@ -59,7 +60,7 @@ class TransformationTest(TestCase):
         candles.insert_many([day_one, day_two, day_three])
 
     @classmethod
-    def setUpSamples(cls):
+    def set_up_samples(cls):
         sample = ts.TrainingSample(
             instrument=cls.eur_usd,
             date=datetime.date(2017, 9, 6),
@@ -68,10 +69,9 @@ class TransformationTest(TestCase):
         )
         sample.save()
 
-    def test_training_data_transformation(self):
+    def test_training_data_transform(self):
         # When
-        t = Transformer()
-        t.run()
+        tsfr.run()
 
         # Then
         samples = ts.get_all(['date'])

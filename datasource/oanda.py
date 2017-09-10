@@ -27,11 +27,22 @@ TRADE_TOKEN = ACCOUNT_INFO.get('Token-Trade')
 
 
 class Granularity(Enum):
+    """ Granularity Enum class. Currently only support DAILY.
+    """
     DAILY = 'D'
 
 
 class OHLC:
+    """ The OHLC class records the open, high, low and close.
+    """
+    # pylint: disable=too-few-public-methods
+
     def __init__(self, ohlc):
+        """ Initialize the OHLC class with a dictionary.
+
+            Args:
+                ohlc: Dictionary. Need to contain keys 'o', 'h', 'l', 'c'.
+        """
         if not ohlc:
             raise TypeError('OHLC requires all of Open, High, Low and Close.')
         if not all(rates in ohlc for rates in ('o', 'h', 'l', 'c')):
@@ -43,7 +54,17 @@ class OHLC:
 
 
 class OandaCandle:
+    """ The OandaCandle class represents a candle returned form OANDA's API.
+    """
+    # pylint: disable=too-few-public-methods
+
     def __init__(self, raw_candle):
+        """ Initialize the OandaCandle class with a dictionary.
+
+            Args:
+                raw_candle: Dictionary. Need to contain 'time' and 'complete'.
+                    May also contain 'volume', 'bid', 'ask', and 'mid'.
+        """
 
         if 'time' not in raw_candle or 'complete' not in raw_candle:
             raise TypeError('OANDA Candle missing "complete" and/or "time"')
@@ -57,7 +78,7 @@ class OandaCandle:
 
 
 class OandaConnection:
-    """ The OandaConnection class, responsible for managing HTTP connections
+    """ The OandaConnection class, responsible for managing HTTPS connections
         with OANDA.
     """
 
@@ -83,6 +104,20 @@ class OandaConnection:
         }
 
         return
+
+    def get_environment(self):
+        """ Returns the environment of the connection, either GAME or TRADE.
+
+            Args:
+                None.
+
+            Returns:
+                String. oanda.GAME for game, or oanda.TRADE for trade.
+        """
+        if self.url == GAME_URL:
+            return GAME
+        elif self.url == TRADE_URL:
+            return TRADE
 
     def fetch_daily_candles(self, instrument, start_date, end_date):
         """ Obtain a list of daily bid-ask candles for the given instrument.
@@ -118,13 +153,23 @@ class OandaConnection:
         self.conn.close()
 
         if 'candles' in response_content:
-            candles = response_content.get('candles')
-            return [OandaCandle(x) for x in candles]
-        else:
-            return []
+            daily_candles = response_content.get('candles')
+            return [OandaCandle(x) for x in daily_candles]
+
+        return []
 
 
 def map_candle_to_db(oanda_candle, instrument, granularity):
+    """ Map a OandaCandle to a candles.Candle object.
+
+        Args:
+            oanda_candle: OandaCandle object.
+            instrument: String. The currency pair. e.g. 'EUR_USD'.
+            granularity: Granularity object.
+
+        Returns:
+            db_candle: candles.Candle object with the given info.
+    """
     db_candle = candles.get_empty()
 
     db_candle.instrument = instruments.get_instrument_by_name(instrument)

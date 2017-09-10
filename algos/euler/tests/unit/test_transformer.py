@@ -1,10 +1,11 @@
+# pylint: disable=missing-docstring
 import datetime
 from decimal import Decimal
 from unittest import TestCase
 from unittest.mock import patch
 
+from algos.euler import transformer as tsfr
 from algos.euler.models import training_samples as ts
-from algos.euler.transformer import Transformer
 from datasource.models import candles, instruments
 
 TWO_PLACES = Decimal('0.01')
@@ -14,11 +15,11 @@ class TransformerTest(TestCase):
 
     @classmethod
     def setUpClass(cls):
-        cls.setUpInstruments()
-        cls.setUpCandles()
+        cls.set_up_instruments()
+        cls.set_up_candles()
 
     @classmethod
-    def setUpInstruments(cls):
+    def set_up_instruments(cls):
         cls.eur_usd = instruments.Instrument()
         cls.eur_usd.name = 'EUR_USD'
         cls.eur_usd.multiplier = 10000
@@ -28,7 +29,7 @@ class TransformerTest(TestCase):
         cls.usd_jpy.multiplier = 100
 
     @classmethod
-    def setUpCandles(cls):
+    def set_up_candles(cls):
         # EUR_USD 1
         bid = {'o': 1.29288, 'h': 1.29945, 'l': 1.29045, 'c': 1.29455}
         ask = {'o': 1.29343, 'h': 1.29967, 'l': 1.29063, 'c': 1.29563}
@@ -49,9 +50,8 @@ class TransformerTest(TestCase):
         cls.candle_usd_jpy.instrument = cls.usd_jpy
 
     def test_extract_features(self):
-        t = Transformer()
         # When
-        features = t.extract_features(self.candle_eur_usd)
+        features = tsfr.extract_features(self.candle_eur_usd)
         expected = [65.7, -24.3, 16.7, 5.5, 67.9, -22.5, 27.5]
         expected = [Decimal(x).quantize(TWO_PLACES) for x in expected]
 
@@ -59,7 +59,7 @@ class TransformerTest(TestCase):
         self.assertEqual(features, expected)
 
         # When
-        features = t.extract_features(self.candle_usd_jpy)
+        features = tsfr.extract_features(self.candle_usd_jpy)
         expected = [51.6, -39.7, -74.1, 7.1, 56.5, -38.3, -65.5]
         expected = [Decimal(x).quantize(TWO_PLACES) for x in expected]
 
@@ -67,25 +67,24 @@ class TransformerTest(TestCase):
         self.assertEqual(features, expected)
 
     def test_get_profitable_change(self):
-        t = Transformer()
         # When
-        profitable_change = t.get_profitable_change(self.candle_eur_usd)
+        profitable_change = tsfr.get_profitable_change(self.candle_eur_usd)
         expected = Decimal(10000 * (1.29455 - 1.29343)).quantize(TWO_PLACES)
 
         # Then
         self.assertEqual(profitable_change, expected)
 
         # When
-        profitable_change = t.get_profitable_change(self.candle_usd_jpy)
+        profitable_change = tsfr.get_profitable_change(self.candle_usd_jpy)
         expected = Decimal(100 * (109.299 - 109.954)).quantize(TWO_PLACES)
 
         # Then
         self.assertEqual(profitable_change, expected)
 
     def test_build_training_sample(self):
-        t = Transformer()
         # When
-        sample = t.build_sample_row(self.candle_eur_usd, self.candle_eur_usd_2)
+        sample = tsfr.build_sample_row(
+            self.candle_eur_usd, self.candle_eur_usd_2)
 
         # Then
         expected_fs = [65.7, -24.3, 16.7, 5.5, 67.9, -22.5, 27.5]
@@ -96,7 +95,6 @@ class TransformerTest(TestCase):
         self.assertEqual(sample.target, 0)
 
     def test_start_time(self):
-        t = Transformer()
         # Given
         mock_sample = ts.TrainingSample()
         mock_sample.date = datetime.date(2017, 5, 3)
@@ -104,9 +102,9 @@ class TransformerTest(TestCase):
         # When - Then
         expected = datetime.datetime(2017, 5, 2)
         with patch.object(ts, 'get_last', return_value=mock_sample):
-            self.assertEqual(t.get_start_time('DOES NOT MATTER'), expected)
+            self.assertEqual(tsfr.get_start_time('DOES NOT MATTER'), expected)
 
         # When - Then
         expected = datetime.datetime(2005, 1, 1)
         with patch.object(ts, 'get_last', return_value=None):
-            self.assertEqual(t.get_start_time('DOES NOT MATTER'), expected)
+            self.assertEqual(tsfr.get_start_time('DOES NOT MATTER'), expected)

@@ -1,3 +1,4 @@
+# pylint: disable=missing-docstring
 from decimal import Decimal
 from unittest import TestCase
 from unittest.mock import patch
@@ -30,7 +31,7 @@ class OandaTest(TestCase):
     def test_oanda_candle_instantiation(self):
         # Incomplete
         with self.assertRaises(TypeError):
-            oanda.OandaCandle()
+            oanda.OandaCandle(None)
 
         # Incomplete
         incomplete_candle = {'time': '2018-09-12'}
@@ -55,18 +56,18 @@ class OandaTest(TestCase):
         self.assertEqual(oc.ask.o, complete_candle.get('ask').get('o'))
         self.assertIsNone(oc.bid)
 
-    def test_oanda_connection_instantiation(self):
+    def test_oanda_conn_instantiation(self):
         # Invalid
         with self.assertRaises(TypeError):
             oanda.OandaConnection('InvalidEnvironment')
 
         # Game
-        oConn = oanda.OandaConnection(oanda.GAME)
-        self.assertEqual(oConn.url, oanda.GAME_URL)
-        self.assertEqual(oConn.access_token, oanda.GAME_TOKEN)
-        self.assertIsNotNone(oConn.conn)
+        oanda_conn = oanda.OandaConnection(oanda.GAME)
+        self.assertEqual(oanda_conn.url, oanda.GAME_URL)
+        self.assertEqual(oanda_conn.access_token, oanda.GAME_TOKEN)
+        self.assertIsNotNone(oanda_conn.conn)
 
-    def test_map_to_db_with_valid_instrument(self):
+    def test_map_to_candles_to_db(self):
         # Given
         raw_candle = {
             'time': '2015-11-23',

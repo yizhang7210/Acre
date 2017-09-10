@@ -1,11 +1,13 @@
 import datetime
+from decimal import Decimal
 
-import numpy as np
 from django.test import TestCase
 
 from algos.euler.models import training_samples as ts
 from algos.euler.transformer import Transformer
 from datasource.models import candles, instruments
+
+TWO_PLACES = Decimal('0.01')
 
 
 class TransformationTest(TestCase):
@@ -75,4 +77,4 @@ class TransformationTest(TestCase):
         samples = ts.get_all(['date'])
         self.assertEqual(len(samples), 2)
         self.assertEqual(samples[1].date, datetime.date(2017, 9, 7))
-        np.testing.assert_almost_equal(samples[1].target, -5.9, decimal=2)
+        self.assertEqual(samples[1].target, Decimal(-5.9).quantize(TWO_PLACES))

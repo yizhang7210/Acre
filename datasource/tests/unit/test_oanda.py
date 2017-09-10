@@ -1,8 +1,11 @@
+from decimal import Decimal
 from unittest import TestCase
 from unittest.mock import patch
 
 from datasource import oanda
 from datasource.models import instruments
+
+SIX_PLACES = Decimal('0.000001')
 
 
 class OandaTest(TestCase):
@@ -85,4 +88,5 @@ class OandaTest(TestCase):
         self.assertEqual(db_candle.instrument.name, 'GBP_USD')
         self.assertEqual(db_candle.granularity, gran.value)
         self.assertEqual(db_candle.start_time, oc.time)
-        self.assertEqual(db_candle.high_ask, oc.ask.h)
+        expected_high_ask = Decimal(oc.ask.h).quantize(SIX_PLACES)
+        self.assertEqual(db_candle.high_ask, expected_high_ask)

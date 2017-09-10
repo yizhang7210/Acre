@@ -1,8 +1,11 @@
 import datetime
+import decimal
 
 from datasource.models import candles, instruments
 
 from .models import training_samples as ts
+
+TWO_PLACES = decimal.Decimal('0.01')
 
 
 class Transformer:
@@ -18,17 +21,19 @@ class Transformer:
             day_candle.close_ask,
         ]
         features = [multiplier * (x - day_candle.open_bid) for x in features]
+        features = [decimal.Decimal(x).quantize(TWO_PLACES) for x in features]
 
         return features
 
     def get_profitable_change(self, day_candle):
         multiplier = day_candle.instrument.multiplier
+        change = 0
         if day_candle.close_bid > day_candle.open_ask:
-            return multiplier * (day_candle.close_bid - day_candle.open_ask)
+            change = multiplier * (day_candle.close_bid - day_candle.open_ask)
         elif day_candle.close_ask < day_candle.open_bid:
-            return multiplier * (day_candle.close_ask - day_candle.open_bid)
-        else:
-            return 0
+            change = multiplier * (day_candle.close_ask - day_candle.open_bid)
+
+        return decimal.Decimal(change).quantize(TWO_PLACES)
 
     def build_sample_row(self, candle_previous, candle_next):
         return ts.get_one(

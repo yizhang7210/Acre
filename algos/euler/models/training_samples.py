@@ -11,10 +11,10 @@ class TrainingSample(models.Model):
     )
     date = models.DateField()
     features = ArrayField(
-        models.FloatField(),
+        models.DecimalField(max_digits=7, decimal_places=2),
         size=7
     )
-    target = models.FloatField()
+    target = models.DecimalField(max_digits=7, decimal_places=2)
 
     class Meta:
         unique_together = (('instrument', 'date'),)

@@ -2,15 +2,16 @@
     This module is responsible for OANDA related utilities and connections.
 """
 
-# External imports
 import http.client
 import json
 import os
 import urllib
+from decimal import Decimal
 from enum import Enum
 
-# Internal imports
 from .models import candles, instruments
+
+SIX_PLACES = Decimal('0.000001')
 
 # Account Details.
 APP_DIR = os.path.dirname(os.path.realpath(__file__))
@@ -132,15 +133,15 @@ def map_candle_to_db(oanda_candle, instrument, granularity):
     db_candle.volume = oanda_candle.volume
 
     if oanda_candle.bid is not None:
-        db_candle.open_bid = oanda_candle.bid.o
-        db_candle.high_bid = oanda_candle.bid.h
-        db_candle.low_bid = oanda_candle.bid.l
-        db_candle.close_bid = oanda_candle.bid.c
+        db_candle.open_bid = Decimal(oanda_candle.bid.o).quantize(SIX_PLACES)
+        db_candle.high_bid = Decimal(oanda_candle.bid.h).quantize(SIX_PLACES)
+        db_candle.low_bid = Decimal(oanda_candle.bid.l).quantize(SIX_PLACES)
+        db_candle.close_bid = Decimal(oanda_candle.bid.c).quantize(SIX_PLACES)
 
     if oanda_candle.ask is not None:
-        db_candle.open_ask = oanda_candle.ask.o
-        db_candle.high_ask = oanda_candle.ask.h
-        db_candle.low_ask = oanda_candle.ask.l
-        db_candle.close_ask = oanda_candle.ask.c
+        db_candle.open_ask = Decimal(oanda_candle.ask.o).quantize(SIX_PLACES)
+        db_candle.high_ask = Decimal(oanda_candle.ask.h).quantize(SIX_PLACES)
+        db_candle.low_ask = Decimal(oanda_candle.ask.l).quantize(SIX_PLACES)
+        db_candle.close_ask = Decimal(oanda_candle.ask.c).quantize(SIX_PLACES)
 
     return db_candle

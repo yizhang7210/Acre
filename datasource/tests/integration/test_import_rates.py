@@ -1,9 +1,12 @@
+from decimal import Decimal
 from unittest.mock import patch
 
 from django.test import TestCase
 
 from datasource import oanda, rates
 from datasource.models import candles, instruments
+
+SIX_PLACES = Decimal('0.000001')
 
 
 class RatesImportTest(TestCase):
@@ -14,18 +17,18 @@ class RatesImportTest(TestCase):
 
         # When
         rates.main()
+        expected_high_bid = Decimal(1.29834).quantize(SIX_PLACES)
+        expected_close_bid = Decimal(1.29765).quantize(SIX_PLACES)
+        expected_open_ask = Decimal(0.9656).quantize(SIX_PLACES)
+        expected_low_ask = Decimal(112.836).quantize(SIX_PLACES)
 
         # Then
         all_candles = candles.get_all(['instrument_id', 'start_time'])
-        self.assertEqual(20, len(all_candles))
+        self.assertEqual(len(all_candles), 20)
 
-        self.assertEqual(22237, all_candles[0].volume)
-        self.assertEqual('EUR_USD', all_candles[1].instrument.name)
-        self.assertEqual(1.29171, all_candles[4].open_bid)
-        self.assertEqual(1.29834, all_candles[5].high_bid)
-        self.assertEqual(1.29268, all_candles[8].low_bid)
-        self.assertEqual(1.29765, all_candles[9].close_bid)
-        self.assertEqual(0.9656, all_candles[12].open_ask)
-        self.assertEqual(0.96612, all_candles[13].high_ask)
-        self.assertEqual(112.836, all_candles[16].low_ask)
-        self.assertEqual(113.231, all_candles[17].close_ask)
+        self.assertEqual(all_candles[0].volume, 22237)
+        self.assertEqual(all_candles[1].instrument.name, 'EUR_USD')
+        self.assertEqual(all_candles[5].high_bid, expected_high_bid)
+        self.assertEqual(all_candles[9].close_bid, expected_close_bid)
+        self.assertEqual(all_candles[12].open_ask, expected_open_ask)
+        self.assertEqual(all_candles[16].low_ask, expected_low_ask)

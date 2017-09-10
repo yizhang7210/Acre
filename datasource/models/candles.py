@@ -14,15 +14,15 @@ class Candle(models.Model):
 
     granularity = models.CharField(max_length=5)
 
-    open_bid = models.FloatField()
-    high_bid = models.FloatField()
-    low_bid = models.FloatField()
-    close_bid = models.FloatField()
+    open_bid = models.DecimalField(max_digits=12, decimal_places=6)
+    high_bid = models.DecimalField(max_digits=12, decimal_places=6)
+    low_bid = models.DecimalField(max_digits=12, decimal_places=6)
+    close_bid = models.DecimalField(max_digits=12, decimal_places=6)
 
-    open_ask = models.FloatField()
-    high_ask = models.FloatField()
-    low_ask = models.FloatField()
-    close_ask = models.FloatField()
+    open_ask = models.DecimalField(max_digits=12, decimal_places=6)
+    high_ask = models.DecimalField(max_digits=12, decimal_places=6)
+    low_ask = models.DecimalField(max_digits=12, decimal_places=6)
+    close_ask = models.DecimalField(max_digits=12, decimal_places=6)
 
     class Meta:
         unique_together = (('instrument', 'start_time', 'granularity'),)

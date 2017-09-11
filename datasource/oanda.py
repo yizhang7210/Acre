@@ -6,8 +6,11 @@ import http.client
 import json
 import os
 import urllib
+from datetime import datetime
 from decimal import Decimal
 from enum import Enum
+
+import pytz
 
 from .models import candles, instruments
 
@@ -32,27 +35,6 @@ class Granularity(Enum):
     DAILY = 'D'
 
 
-class OHLC:
-    """ The OHLC class records the open, high, low and close.
-    """
-    # pylint: disable=too-few-public-methods
-
-    def __init__(self, ohlc):
-        """ Initialize the OHLC class with a dictionary.
-
-            Args:
-                ohlc: Dictionary. Need to contain keys 'o', 'h', 'l', 'c'.
-        """
-        if not ohlc:
-            raise TypeError('OHLC requires all of Open, High, Low and Close.')
-        if not all(rates in ohlc for rates in ('o', 'h', 'l', 'c')):
-            raise TypeError('OHLC requires all of Open, High, Low and Close.')
-        self.o = ohlc.get('o')
-        self.h = ohlc.get('h')
-        self.l = ohlc.get('l')
-        self.c = ohlc.get('c')
-
-
 class OandaCandle:
     """ The OandaCandle class represents a candle returned form OANDA's API.
     """
@@ -69,12 +51,12 @@ class OandaCandle:
         if 'time' not in raw_candle or 'complete' not in raw_candle:
             raise TypeError('OANDA Candle missing "complete" and/or "time"')
 
-        self.time = raw_candle.get('time')
+        self.time = parse_time_str(raw_candle.get('time'))
         self.complete = raw_candle.get('complete')
         self.volume = raw_candle.get('volume') or 0
-        self.ask = OHLC(raw_candle.get('ask')) if 'ask' in raw_candle else None
-        self.bid = OHLC(raw_candle.get('bid')) if 'bid' in raw_candle else None
-        self.mid = OHLC(raw_candle.get('mid')) if 'mid' in raw_candle else None
+        self.ask = raw_candle.get('ask') if 'ask' in raw_candle else None
+        self.bid = raw_candle.get('bid') if 'bid' in raw_candle else None
+        self.mid = raw_candle.get('mid') if 'mid' in raw_candle else None
 
 
 class OandaConnection:
@@ -170,23 +152,45 @@ def map_candle_to_db(oanda_candle, instrument, granularity):
         Returns:
             db_candle: candles.Candle object with the given info.
     """
-    db_candle = candles.get_empty()
-
-    db_candle.instrument = instruments.get_instrument_by_name(instrument)
-    db_candle.granularity = granularity.value
-    db_candle.start_time = oanda_candle.time
-    db_candle.volume = oanda_candle.volume
-
-    if oanda_candle.bid is not None:
-        db_candle.open_bid = Decimal(oanda_candle.bid.o).quantize(SIX_PLACES)
-        db_candle.high_bid = Decimal(oanda_candle.bid.h).quantize(SIX_PLACES)
-        db_candle.low_bid = Decimal(oanda_candle.bid.l).quantize(SIX_PLACES)
-        db_candle.close_bid = Decimal(oanda_candle.bid.c).quantize(SIX_PLACES)
-
-    if oanda_candle.ask is not None:
-        db_candle.open_ask = Decimal(oanda_candle.ask.o).quantize(SIX_PLACES)
-        db_candle.high_ask = Decimal(oanda_candle.ask.h).quantize(SIX_PLACES)
-        db_candle.low_ask = Decimal(oanda_candle.ask.l).quantize(SIX_PLACES)
-        db_candle.close_ask = Decimal(oanda_candle.ask.c).quantize(SIX_PLACES)
+    db_candle = candles.create_one(
+        instrument=instruments.get_instrument_by_name(instrument),
+        granularity=granularity.value,
+        start_time=oanda_candle.time,
+        volume=oanda_candle.volume,
+        bid=to_decimal(oanda_candle.bid),
+        ask=to_decimal(oanda_candle.ask)
+    )
 
     return db_candle
+
+
+def parse_time_str(time_str):
+    """ Parse an RFC3339 time stamp to datetime object in UTC.
+
+        Args:
+            time_str: String. Timestamp. e.g. 2017-07-04T21:00:00.000000000Z
+
+        Returns:
+            Datetime object with the given time in UTC.
+    """
+    time = datetime.strptime(time_str[:-4], '%Y-%m-%dT%H:%M:%S.%f')
+    time = time.replace(tzinfo=pytz.timezone('UTC'))
+
+    return time
+
+
+def to_decimal(ohlc):
+    """ Convert the content of a dictionary (ohlc) to decimal with 6 places.
+
+        Args:
+            ohlc: Dictionary.
+
+        Returns:
+            Same dictionary with its values converted to Deicmals.
+    """
+    if ohlc is None:
+        return
+    for key in ohlc:
+        ohlc[key] = Decimal(ohlc.get(key)).quantize(SIX_PLACES)
+
+    return ohlc

@@ -22,8 +22,8 @@ def get_start_date_str(instrument):
             start_date: String. Formatted start date. e.g. '2015-09-08'
     """
     last_candle = candles.get_last(instrument, oanda.Granularity.DAILY.value)
-    last_date = last_candle.start_time
-    if last_date is not None:
+    if last_candle is not None:
+        last_date = last_candle.start_time
         # Candles are aligned with America/New_York time.
         # Hence a candle with start_time of 2017-08-06 is really for the 7th.
         return str((last_date + datetime.timedelta(2)).date())

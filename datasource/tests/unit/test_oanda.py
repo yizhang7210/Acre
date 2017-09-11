@@ -11,23 +11,6 @@ SIX_PLACES = Decimal('0.000001')
 
 class OandaTest(TestCase):
 
-    def test_ohlc_instantiation(self):
-        # Incomplete
-        with self.assertRaises(TypeError):
-            oanda.OHLC(None)
-
-        # Incomplete
-        with self.assertRaises(TypeError):
-            oanda.OHLC({'o': 1, 'h': 2, 'l': 0.5})
-
-        # Success
-        input_ohlc = {'o': 1, 'h': 2, 'l': 0.5, 'c': 1.2}
-        ohlc = oanda.OHLC(input_ohlc)
-        self.assertEqual(ohlc.o, input_ohlc.get('o'))
-        self.assertEqual(ohlc.h, input_ohlc.get('h'))
-        self.assertEqual(ohlc.l, input_ohlc.get('l'))
-        self.assertEqual(ohlc.c, input_ohlc.get('c'))
-
     def test_oanda_candle_instantiation(self):
         # Incomplete
         with self.assertRaises(TypeError):
@@ -45,15 +28,15 @@ class OandaTest(TestCase):
 
         # Success
         complete_candle = {
-            'time': '2015-11-23',
+            'time': '2015-11-23T21:00:00.000000000Z',
             'complete': True,
             'volume': 3456,
             'ask': {'o': 3.4, 'h': 4.1, 'l': 2.3, 'c': 4}
         }
         oc = oanda.OandaCandle(complete_candle)
-        self.assertEqual(oc.time, complete_candle.get('time'))
+        self.assertEqual(oc.time.day, 23)
         self.assertEqual(oc.volume, complete_candle.get('volume'))
-        self.assertEqual(oc.ask.o, complete_candle.get('ask').get('o'))
+        self.assertEqual(oc.ask.get('o'), complete_candle.get('ask').get('o'))
         self.assertIsNone(oc.bid)
 
     def test_oanda_conn_instantiation(self):
@@ -70,7 +53,7 @@ class OandaTest(TestCase):
     def test_map_to_candles_to_db(self):
         # Given
         raw_candle = {
-            'time': '2015-11-23',
+            'time': '2015-11-24T21:00:00.000000000Z',
             'complete': True,
             'volume': 3456,
             'ask': {'o': 3.4, 'h': 4.1, 'l': 2.3, 'c': 4}
@@ -89,5 +72,5 @@ class OandaTest(TestCase):
         self.assertEqual(db_candle.instrument.name, 'GBP_USD')
         self.assertEqual(db_candle.granularity, gran.value)
         self.assertEqual(db_candle.start_time, oc.time)
-        expected_high_ask = Decimal(oc.ask.h).quantize(SIX_PLACES)
+        expected_high_ask = Decimal(oc.ask.get('h')).quantize(SIX_PLACES)
         self.assertEqual(db_candle.high_ask, expected_high_ask)

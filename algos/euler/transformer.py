@@ -74,7 +74,7 @@ def build_sample_row(candle_previous, candle_next):
         Returns:
             sample: TrainingSample object. One training sample for learning.
     """
-    return ts.get_one(
+    return ts.create_one(
         instrument=candle_next.instrument,
         date=candle_next.start_time.date() + datetime.timedelta(1),
         features=extract_features(candle_previous),

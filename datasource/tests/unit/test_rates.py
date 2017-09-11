@@ -21,7 +21,7 @@ class RatesTest(TestCase):
         self.assertEqual(start_date, '2017-05-05')
 
         # When
-        with patch.object(candles, 'get_last', return_value=candles.Candle()):
+        with patch.object(candles, 'get_last', return_value=None):
             start_date = rates.get_start_date_str('DOES NOT MATTER')
 
         # Then

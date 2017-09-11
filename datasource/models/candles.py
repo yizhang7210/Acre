@@ -40,24 +40,26 @@ def get_empty():
     return Candle()
 
 
-def get_one(**kwargs):
+def create_one(**kwargs):
     """ Create a Candle object with the given fields.
     """
     if 'bid' in kwargs:
         bid = kwargs.get('bid')
-        kwargs['open_bid'] = bid.get('o')
-        kwargs['high_bid'] = bid.get('h')
-        kwargs['low_bid'] = bid.get('l')
-        kwargs['close_bid'] = bid.get('c')
         del kwargs['bid']
+        if bid is not None:
+            kwargs['open_bid'] = bid.get('o')
+            kwargs['high_bid'] = bid.get('h')
+            kwargs['low_bid'] = bid.get('l')
+            kwargs['close_bid'] = bid.get('c')
 
     if 'ask' in kwargs:
         ask = kwargs.get('ask')
-        kwargs['open_ask'] = ask.get('o')
-        kwargs['high_ask'] = ask.get('h')
-        kwargs['low_ask'] = ask.get('l')
-        kwargs['close_ask'] = ask.get('c')
         del kwargs['ask']
+        if ask is not None:
+            kwargs['open_ask'] = ask.get('o')
+            kwargs['high_ask'] = ask.get('h')
+            kwargs['low_ask'] = ask.get('l')
+            kwargs['close_ask'] = ask.get('c')
 
     if 'start_time' in kwargs:
         kwargs['start_time'] = add_timezone(kwargs.get('start_time'))

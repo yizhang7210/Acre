@@ -33,20 +33,20 @@ class TransformerTest(TestCase):
         # EUR_USD 1
         bid = {'o': 1.29288, 'h': 1.29945, 'l': 1.29045, 'c': 1.29455}
         ask = {'o': 1.29343, 'h': 1.29967, 'l': 1.29063, 'c': 1.29563}
-        cls.candle_eur_usd = candles.get_one(bid=bid, ask=ask)
+        cls.candle_eur_usd = candles.create_one(bid=bid, ask=ask)
         cls.candle_eur_usd.instrument = cls.eur_usd
 
         # EUR_USD 2
         bid = {'o': 1.29455, 'h': 1.29878, 'l': 1.29045, 'c': 1.29521}
         ask = {'o': 1.29563, 'h': 1.29902, 'l': 1.29056, 'c': 1.29533}
-        cls.candle_eur_usd_2 = candles.get_one(bid=bid, ask=ask)
+        cls.candle_eur_usd_2 = candles.create_one(bid=bid, ask=ask)
         cls.candle_eur_usd_2.instrument = cls.eur_usd
         cls.candle_eur_usd_2.start_time = datetime.datetime(2017, 9, 7, 17)
 
         # USD_JPY
         bid = {'o': 109.954, 'h': 110.470, 'l': 109.557, 'c': 109.213}
         ask = {'o': 110.025, 'h': 110.519, 'l': 109.571, 'c': 109.299}
-        cls.candle_usd_jpy = candles.get_one(bid=bid, ask=ask)
+        cls.candle_usd_jpy = candles.create_one(bid=bid, ask=ask)
         cls.candle_usd_jpy.instrument = cls.usd_jpy
 
     def test_extract_features(self):
@@ -96,8 +96,7 @@ class TransformerTest(TestCase):
 
     def test_start_time(self):
         # Given
-        mock_sample = ts.TrainingSample()
-        mock_sample.date = datetime.date(2017, 5, 3)
+        mock_sample = ts.create_one(date=datetime.date(2017, 5, 3))
 
         # When - Then
         expected = datetime.datetime(2017, 5, 2)

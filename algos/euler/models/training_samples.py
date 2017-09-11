@@ -24,7 +24,7 @@ class TrainingSample(models.Model):
         unique_together = (('instrument', 'date'),)
 
 
-def get_one(**kwargs):
+def create_one(**kwargs):
     """ Create a Candle object with the given fields.
     """
     return TrainingSample(**kwargs)

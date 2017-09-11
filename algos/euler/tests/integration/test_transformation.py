@@ -69,6 +69,12 @@ class TransformationTest(TestCase):
         )
         sample.save()
 
+    @classmethod
+    def tearDownClass(cls):
+        super(TransformationTest, cls).tearDownClass()
+        ts.delete_all()
+        candles.delete_all()
+
     def test_training_data_transform(self):
         # When
         tsfr.run()

@@ -34,14 +34,20 @@ class Candle(models.Model):
         unique_together = (('instrument', 'start_time', 'granularity'),)
 
 
-def get_empty():
-    """ Returns an empty Candle object.
-    """
-    return Candle()
-
-
 def create_one(**kwargs):
     """ Create a Candle object with the given fields.
+
+        Args:
+            Named arguments.
+                instrument: Instrument object.
+                start_time: Datetime object. Candle start time.
+                volume: Positive integer.
+                granularity: String. 'D' for Daily.
+                bid: Dictionary with 'o', 'h', 'l', 'c'
+                ask: Dictionary with 'o', 'h', 'l', 'c'
+
+        Returns:
+            Candle object with the given fields.
     """
     if 'bid' in kwargs:
         bid = kwargs.get('bid')
@@ -65,6 +71,15 @@ def create_one(**kwargs):
         kwargs['start_time'] = add_timezone(kwargs.get('start_time'))
 
     return Candle(**kwargs)
+
+
+def delete_all():
+    """ Delete all candles in the database.
+
+        Args:
+            None.
+    """
+    return Candle.objects.all().delete()
 
 
 def get_all(order_by):

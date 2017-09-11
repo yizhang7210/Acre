@@ -25,7 +25,17 @@ class TrainingSample(models.Model):
 
 
 def create_one(**kwargs):
-    """ Create a Candle object with the given fields.
+    """ Create a TrainingSample object with the given fields.
+
+        Args:
+            Named arguments.
+                instrument: Instrument object.
+                date: Date object.
+                features: List of Decimals with 2 decimal places.
+                target: Decimal with 2 decimal places.
+
+        Returns:
+            TrainingSample object with the given fields.
     """
     return TrainingSample(**kwargs)
 
@@ -40,6 +50,15 @@ def get_all(order_by):
             List of all TrainingSample objects (QuerySet).
     """
     return TrainingSample.objects.all().order_by(*order_by)
+
+
+def delete_all():
+    """ Delete all training samples in the database.
+
+        Args:
+            None.
+    """
+    return TrainingSample.objects.all().delete()
 
 
 def get_last(instrument):

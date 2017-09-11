@@ -14,6 +14,11 @@ SIX_PLACES = Decimal('0.000001')
 
 class RatesImportTest(TestCase):
 
+    @classmethod
+    def tearDownClass(cls):
+        super(RatesImportTest, cls).tearDownClass()
+        candles.delete_all()
+
     @patch.object(rates, 'get_start_date_str', return_value='2017-07-05')
     @patch.object(rates, 'get_end_date_str', return_value='2017-07-10')
     def test_import_rates(self, mock1, mock2):

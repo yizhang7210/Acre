@@ -24,6 +24,13 @@ as well as the configurations in `acre/settings/local.py`
 - You should be good to go: make sure `./manage.py test` all pass
 
 
+Code Commit Checklist
+---------------------
+- [ ] All tests pass.
+- [ ] Run `pylint <app> --load-plugins pylint_django` on all apps with 10.0 score.
+- [ ] Update documentation whenever appropriate.
+
+
 Resources
 ---------
 Django App:

@@ -40,6 +40,26 @@ def create_one(**kwargs):
     return TrainingSample(**kwargs)
 
 
+def get_samples(**kwargs):
+    """ Retrieve a list of training samples with given conditions.
+
+        Args:
+            kwargs: Named arguments for filtering training samples.
+                instrument: Instrument object. Filter by this instrument.
+                order_by: String. Space delimited string of fields to order by.
+
+        Returns:
+            List of Candle objects satisfying the conditions (QuerySet).
+    """
+    samples = TrainingSample.objects.all()
+    if 'instrument' in kwargs:
+        samples = samples.filter(instrument=kwargs.get('instrument'))
+    if 'order_by' in kwargs:
+        samples = samples.order_by(kwargs.get('order_by'))
+
+    return samples
+
+
 def get_all(order_by):
     """ Returns all training samples in the database.
 

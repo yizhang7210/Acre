@@ -4,7 +4,6 @@
     Supported data sources include: OANDA.
 """
 
-# External imports
 import datetime
 
 from . import oanda

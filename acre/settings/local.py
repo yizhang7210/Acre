@@ -1,3 +1,5 @@
+from celery.schedules import crontab
+
 from .base import *
 
 # Local configs
@@ -12,4 +14,13 @@ DATABASES = {
         'PASSWORD': 'acrelocaldb',
         'HOST': 'localhost',
     }
+}
+
+# Celery related
+CELERY_BROKER_URL = 'amqp://localhost'
+CELERY_BEAT_SCHEDULE = {
+    'daily-update': {
+        'task': 'algos.main.main',
+        'schedule': crontab(minute=0, hour=17)
+    },
 }

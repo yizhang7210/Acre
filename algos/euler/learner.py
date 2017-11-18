@@ -3,10 +3,9 @@
 """
 import itertools
 
+from algos.euler.models import training_samples as ts
 from sklearn.model_selection import cross_val_score
 from sklearn.tree import DecisionTreeRegressor
-
-from algos.euler.models import training_samples as ts
 
 
 class Learner:

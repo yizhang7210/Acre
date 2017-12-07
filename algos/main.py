@@ -8,3 +8,5 @@ from celery import shared_task
 def main():
     """ Entry point."""
     print('main')
+    # datasource.rates.main()
+    # Kick off individual algos

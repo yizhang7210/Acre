@@ -36,3 +36,11 @@ def get_all():
             List of Instrument objects (QuerySet).
     """
     return Instrument.objects.all()
+
+def delete_all():
+    """ Delete all instruments in the database.
+
+        Args:
+            None.
+    """
+    return Instrument.objects.all().delete()

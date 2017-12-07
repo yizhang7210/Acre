@@ -1,12 +1,16 @@
 """ This is algos.euler.learner module.
     This module is responsible for training the models and make predictions.
 """
+import decimal
 import itertools
 
-from algos.euler.models import training_samples as ts
+import numpy as np
 from sklearn.model_selection import cross_val_score
 from sklearn.tree import DecisionTreeRegressor
 
+from algos.euler.models import training_samples as ts
+
+TWO_PLACES = decimal.Decimal('0.01')
 
 class Learner:
     """ Class responsible for training models, finding the best fit and making
@@ -82,9 +86,15 @@ class Learner:
         self.model.set_params(**best_params)
         self.model.fit(features, targets)
 
-# Main
-# for ins in instruments.get_all():
-#     for pred in predictors.get_all():
-#         learner = Learner(ins, pred)
-#         learner.learn()
-#         learner.predict()
+    def predict(self, features):
+        """ Use trained model to predict profitable change given the features.
+
+            Args:
+                features: List of floats.
+
+            Returns:
+                Decimal. Predicted profitable change.
+        """
+        features = np.asarray(features).reshape(1, -1)
+        predicted = self.model.predict(features)
+        return decimal.Decimal(float(predicted)).quantize(TWO_PLACES)

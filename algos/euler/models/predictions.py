@@ -25,3 +25,38 @@ class Prediction(models.Model):
 
     class Meta:
         unique_together = (('predictor', 'instrument', 'date'),)
+
+def create_one(**kwargs):
+    """ Create a Prediction object with the given fields.
+
+        Args:
+            Named arguments.
+                date: Date object. Date of the predicted changes.
+                profitable_change: Decimal. Predicted profitable change in pips.
+                instrument: Instrument object.
+                predictor: Predictor object.
+                predictor_params: Dictionary. Parameters used for this prediction.
+
+        Returns:
+            Predicton object with the given fields.
+    """
+    return Prediction(**kwargs)
+
+def get_all(order_by):
+    """ Returns all predictions in the database.
+
+        Args:
+            order_by: List of strings to order the predictions by.
+
+        Returns:
+            List of all Prediction objects (QuerySet).
+    """
+    return Prediction.objects.all().order_by(*order_by)
+
+def delete_all():
+    """ Delete all predictions in the database.
+
+        Args:
+            None.
+    """
+    return Prediction.objects.all().delete()

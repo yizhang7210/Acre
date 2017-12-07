@@ -24,3 +24,22 @@ def create_one(**kwargs):
             Predictor object with the given fields.
     """
     return Predictor(**kwargs)
+
+def get_all():
+    """ Returns all predictors in the database.
+
+        Args:
+            None.
+
+        Returns:
+            List of Predictor objects (QuerySet).
+    """
+    return Predictor.objects.all()
+
+def delete_all():
+    """ Delete all predictors in the database.
+
+        Args:
+            None.
+    """
+    return Predictor.objects.all().delete()

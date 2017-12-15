@@ -8,7 +8,7 @@ from django.db import migrations
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('datasource', '0002_populate_initial_instruments'),
+        ('datasource', '0001_initial'),
     ]
 
     operations = [

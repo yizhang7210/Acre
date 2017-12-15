@@ -50,11 +50,12 @@ DJANGO_APPS = (
 )
 
 THIRD_PARTY_APPS = (
+    'django_extensions',
 )
 
 LOCAL_APPS = (
-    'datasource',
     'algos.euler',
+    'datasource',
 )
 
 INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + LOCAL_APPS

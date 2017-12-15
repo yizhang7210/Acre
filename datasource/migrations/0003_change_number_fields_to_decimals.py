@@ -8,7 +8,7 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('datasource', '0003_add_unique_together_for_candles'),
+        ('datasource', '0002_add_unique_together_for_candles'),
     ]
 
     operations = [

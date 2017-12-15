@@ -25,7 +25,6 @@ def get_instrument_by_name(instrument_name):
 
     return Instrument.objects.get(name=instrument_name)
 
-
 def get_all():
     """ Returns all instruments in the database.
 
@@ -37,6 +36,19 @@ def get_all():
     """
     return Instrument.objects.all()
 
+def create_one(**kwargs):
+    """ Create an Instrument object with the given fields.
+
+        Args:
+            Named arguments.
+                name: String. Name of the instrument.
+                multiplier: Integer. The pip multiplier of the instrument.
+
+        Returns:
+            Instrument object with the given fields.
+    """
+    return Instrument(**kwargs)
+
 def delete_all():
     """ Delete all instruments in the database.
 
@@ -44,3 +56,11 @@ def delete_all():
             None.
     """
     return Instrument.objects.all().delete()
+
+def insert_many(instruments):
+    """ Bulk insert a list of instruments.
+
+        Args:
+            instruments: List of Instrument objects to be inserted.
+    """
+    Instrument.objects.bulk_create(instruments)

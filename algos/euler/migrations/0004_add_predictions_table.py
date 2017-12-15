@@ -10,7 +10,7 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('datasource', '0004_change_number_fields_to_decimals'),
+        ('datasource', '0003_change_number_fields_to_decimals'),
         ('euler', '0003_add_predictors_table'),
     ]
 

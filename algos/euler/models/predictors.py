@@ -43,3 +43,11 @@ def delete_all():
             None.
     """
     return Predictor.objects.all().delete()
+
+def insert_many(predictors):
+    """ Bulk insert a list of predictors.
+
+        Args:
+            predictors: List of Predictor objects to be inserted.
+    """
+    Predictor.objects.bulk_create(predictors)

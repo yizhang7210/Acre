@@ -5,6 +5,7 @@ billiard==3.5.0.3
 celery==4.1.0
 Django==1.11.4
 django-environ==0.4.3
+django-extensions==1.9.8
 djangorestframework==3.6.3
 isort==4.2.15
 kombu==4.1.0
@@ -20,5 +21,6 @@ pytz==2017.2
 scikit-learn==0.19.0
 scipy==0.19.1
 six==1.10.0
+typing==3.6.2
 vine==1.1.4
 wrapt==1.10.11

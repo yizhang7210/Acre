@@ -3,8 +3,8 @@
 from __future__ import unicode_literals
 
 import django.contrib.postgres.fields
-from django.db import migrations, models
 import django.db.models.deletion
+from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
@@ -12,7 +12,7 @@ class Migration(migrations.Migration):
     initial = True
 
     dependencies = [
-        ('datasource', '0003_add_unique_together_for_candles'),
+        ('datasource', '0002_add_unique_together_for_candles'),
     ]
 
     operations = [

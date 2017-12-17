@@ -3,7 +3,7 @@ from decimal import Decimal
 from unittest import TestCase
 from unittest.mock import patch
 
-from datasource import oanda
+from datasource import Granularity, oanda
 from datasource.models import instruments
 
 SIX_PLACES = Decimal('0.000001')
@@ -63,7 +63,7 @@ class OandaTest(TestCase):
         mock_instrument.name = 'GBP_USD'
 
         # When
-        gran = oanda.Granularity.DAILY
+        gran = Granularity.DAILY
         with patch.object(instruments, 'get_instrument_by_name',
                           return_value=mock_instrument):
             db_candle = oanda.map_candle_to_db(oc, 'DOES NOT MATTER', gran)

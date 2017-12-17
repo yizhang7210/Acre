@@ -4,36 +4,27 @@
 
 import http.client
 import json
-import os
 import urllib
 from datetime import datetime
 from decimal import Decimal
-from enum import Enum
 
 import pytz
 
-from .models import candles, instruments
+from datasource import Granularity, get_credentials
+from datasource.models import candles, instruments
 
 SIX_PLACES = Decimal('0.000001')
 
-# Account Details.
-APP_DIR = os.path.dirname(os.path.realpath(__file__))
-ACCOUNT_INFO = json.load(open('{0}/credentials.json'.format(APP_DIR), 'r'))
-
+# OANDA constants
 GAME = 'Game'
 GAME_URL = "api-fxpractice.oanda.com"
-GAME_TOKEN = ACCOUNT_INFO.get('Token-Game')
 
 TRADE = 'Trade'
 TRADE_URL = "api-fxtrade.oanda.com"
+
+ACCOUNT_INFO = get_credentials()
+GAME_TOKEN = ACCOUNT_INFO.get('Token-Game')
 TRADE_TOKEN = ACCOUNT_INFO.get('Token-Trade')
-
-
-class Granularity(Enum):
-    """ Granularity Enum class. Currently only support DAILY.
-    """
-    DAILY = 'D'
-
 
 class OandaCandle:
     """ The OandaCandle class represents a candle returned form OANDA's API.

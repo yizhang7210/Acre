@@ -6,8 +6,8 @@
 
 import datetime
 
-from . import oanda
-from .models import candles, instruments
+from datasource import Granularity, oanda
+from datasource.models import candles, instruments
 
 
 def get_start_date_str(instrument):
@@ -20,7 +20,7 @@ def get_start_date_str(instrument):
         Returns:
             start_date: String. Formatted start date. e.g. '2015-09-08'
     """
-    last_candle = candles.get_last(instrument, oanda.Granularity.DAILY.value)
+    last_candle = candles.get_last(instrument, Granularity.DAILY.value)
     if last_candle is not None:
         last_date = last_candle.start_time
         # Candles are aligned with America/New_York time.
@@ -59,7 +59,7 @@ def import_daily_candles(conn):
 
         ocs = conn.fetch_daily_candles(instrument.name, start_date, end_date)
         all_candles += [oanda.map_candle_to_db(
-            oc, instrument.name, oanda.Granularity.DAILY) for oc in ocs]
+            oc, instrument.name, Granularity.DAILY) for oc in ocs]
 
     return all_candles
 

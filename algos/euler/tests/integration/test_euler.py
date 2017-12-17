@@ -2,11 +2,12 @@
 import datetime
 from decimal import Decimal
 
-from algos.euler import euler
+from django.test import TestCase
+
+from algos.euler.euler import Euler
 from algos.euler.models import training_samples as ts
 from algos.euler.models import predictions, predictors
 from datasource.models import candles, instruments
-from django.test import TestCase
 
 from .test_setup import TestSetup
 
@@ -45,7 +46,10 @@ class EulerAlgoTest(TestCase):
         today = datetime.date(2017, 12, 6)
 
         # When
-        euler.on_end_of_day_update(today)
+        euler_thread = Euler(today)
+        euler_thread.run()
 
         # Then
-        self.assertEqual(1, 1)
+        new_predictions = predictions.get_all(['date'])
+        self.assertEqual(len(new_predictions), 1)
+        self.assertEqual(new_predictions[0].date, today)

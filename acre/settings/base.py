@@ -97,7 +97,6 @@ WSGI_APPLICATION = 'acre.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'acre',
     }
 }
 

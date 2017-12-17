@@ -5,8 +5,8 @@
 from algos.euler import transformer
 from algos.euler.learner import Learner
 from algos.euler.models import predictions, predictors
+from datasource import Granularity
 from datasource.models import candles, instruments
-from datasource.oanda import Granularity
 
 
 def on_end_of_day_update(new_date):

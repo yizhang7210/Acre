@@ -19,6 +19,7 @@ class TestSetup():
             bid=bid, ask=ask,
             instrument=cls.eur_usd,
             start_time=datetime.datetime(2017, 9, 3, 17),
+            granularity='D',
             volume=8
         )
 
@@ -29,6 +30,7 @@ class TestSetup():
             bid=bid, ask=ask,
             instrument=cls.eur_usd,
             start_time=datetime.datetime(2017, 9, 4, 17),
+            granularity='D',
             volume=5
         )
 
@@ -39,6 +41,7 @@ class TestSetup():
             bid=bid, ask=ask,
             instrument=cls.eur_usd,
             start_time=datetime.datetime(2017, 9, 5, 17),
+            granularity='D',
             volume=5
         )
 
@@ -49,6 +52,7 @@ class TestSetup():
             bid=bid, ask=ask,
             instrument=cls.eur_usd,
             start_time=datetime.datetime(2017, 9, 6, 17),
+            granularity='D',
             volume=5
         )
 

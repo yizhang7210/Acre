@@ -60,16 +60,19 @@ class Learner:
 
         return all_params
 
-    def learn(self):
+    def learn(self, **kwargs):
         """ Use the training samples for the given instrument to build a
             learning model for the learner.
 
             Args:
-                None.
+                Named arguments.
+                    cv_fold: Integer. Number of folds for cross validation.
 
             Returns:
                 None.
         """
+        cv_fold = kwargs.get('cv_fold') or 2
+
         all_data = ts.get_samples(instrument=self.instrument, order_by='date')
         features = [x.features for x in all_data]
         targets = [x.target for x in all_data]
@@ -77,7 +80,7 @@ class Learner:
         best_params = {}
         for params in self.generate_all_param_combos():
             self.model.set_params(**params)
-            scores = cross_val_score(self.model, features, targets, cv=10)
+            scores = cross_val_score(self.model, features, targets, cv=cv_fold)
             ave_score = sum(scores) / len(scores)
             if ave_score > best_score:
                 best_score = ave_score

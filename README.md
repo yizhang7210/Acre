@@ -1,5 +1,8 @@
+[![CircleCI](https://circleci.com/gh/yizhang7210/Acre.svg?style=svg)](https://circleci.com/gh/yizhang7210/Acre)
+
 # Acre
 Algorithmically Constructed Rates Explorer
+
 
 Overview
 --------

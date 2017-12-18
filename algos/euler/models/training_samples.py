@@ -47,14 +47,20 @@ def get_samples(**kwargs):
             kwargs: Named arguments for filtering training samples.
                 instrument: Instrument object. Filter by this instrument.
                 order_by: String. Space delimited string of fields to order by.
+                start: Date object. Filter by samples on or after this date.
+                end: Date object. Filter by samples on or before this date.
 
         Returns:
             List of Candle objects satisfying the conditions (QuerySet).
     """
     samples = TrainingSample.objects.all()
-    if 'instrument' in kwargs:
+    if kwargs.get('instrument') is not None:
         samples = samples.filter(instrument=kwargs.get('instrument'))
-    if 'order_by' in kwargs:
+    if kwargs.get('start') is not None:
+        samples = samples.filter(date__gte=kwargs.get('start'))
+    if kwargs.get('end') is not None:
+        samples = samples.filter(date__lte=kwargs.get('end'))
+    if kwargs.get('order_by') is not None:
         samples = samples.order_by(kwargs.get('order_by'))
 
     return samples

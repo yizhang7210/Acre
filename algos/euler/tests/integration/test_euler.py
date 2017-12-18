@@ -41,7 +41,6 @@ class EulerAlgoTest(TestCase):
         instruments.delete_all()
 
     def test_euler_end_of_day(self):
-
         # Given
         today = datetime.date(2017, 12, 6)
 

@@ -60,3 +60,11 @@ def delete_all():
             None.
     """
     return Prediction.objects.all().delete()
+
+def insert_many(predictions):
+    """ Bulk insert a list of predictions.
+
+        Args:
+            predictions: List of Prediction objects to be inserted.
+    """
+    Prediction.objects.bulk_create(predictions)

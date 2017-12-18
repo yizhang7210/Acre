@@ -2,6 +2,7 @@
     This is the main module for algorithm Euler.
 """
 
+import datetime
 import threading
 
 from algos.euler import transformer
@@ -27,27 +28,57 @@ class Euler(threading.Thread):
         """ Implements Thread.run. Runs Euler algo's daily update at End-of-Day.
 
             Args:
-               None.
+                None.
 
             Returns:
                 None.
         """
         transformer.run()
         for ins in instruments.get_all():
-            last_candle = candles.get_last(ins, Granularity.DAILY.value)
-            if not last_candle:
-                return
-            features = transformer.extract_features(last_candle)
-            for predictor in predictors.get_all():
-                learner = Learner(ins, predictor)
-                learner.learn()
-                profitable_change = learner.predict(features)
+            features = self.gather_updated_features(ins)
+            all_predictions = self.get_all_prediction(ins, features)
+            predictions.insert_many(all_predictions)
 
-                new_prediction = predictions.create_one(
-                    instrument=ins,
-                    predictor=predictor,
-                    date=self.prediction_date,
-                    profitable_change=profitable_change,
-                    predictor_params=learner.model.get_params()
-                )
-                new_prediction.save()
+    def gather_updated_features(self, instrument):
+        """ Return the features for prediction from the most recent candle.
+
+            Args:
+                instrument: Instrument object, for which to predict the rates.
+
+            Returns:
+                features: List of Decimals. To be used for prediction.
+        """
+        yesterday = self.prediction_date - datetime.timedelta(1)
+        cutoff_time = datetime.datetime.combine(yesterday, datetime.time())
+        last_candle = candles.get_last(
+            instrument=instrument,
+            granularity=Granularity.DAILY.value,
+            before=cutoff_time
+        )
+        return transformer.extract_features(last_candle)
+
+    def get_all_prediction(self, instrument, features):
+        """ Return the list of predictions from all predictors.
+
+            Args:
+                instrument: Instrument object, for which to predict the rates.
+                features: List of Decimals. To be feed into the learning model.
+
+            Returns:
+                all_predictions: List of Prediction objects. The predictions.
+        """
+        all_predictions = []
+        for predictor in predictors.get_all():
+            learner = Learner(instrument, predictor)
+            learner.learn()
+            profitable_change = learner.predict(features)
+
+            all_predictions.append(predictions.create_one(
+                instrument=instrument,
+                predictor=predictor,
+                date=self.prediction_date,
+                profitable_change=profitable_change,
+                predictor_params=learner.model.get_params()
+            ))
+
+        return all_predictions

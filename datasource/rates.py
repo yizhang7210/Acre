@@ -20,7 +20,10 @@ def get_start_date_str(instrument):
         Returns:
             start_date: String. Formatted start date. e.g. '2015-09-08'
     """
-    last_candle = candles.get_last(instrument, Granularity.DAILY.value)
+    last_candle = candles.get_last(
+        instrument=instrument,
+        granularity=Granularity.DAILY.value
+    )
     if last_candle is not None:
         last_date = last_candle.start_time
         # Candles are aligned with America/New_York time.

@@ -101,37 +101,48 @@ def get_candles(**kwargs):
             kwargs: Named arguments for filtering candles.
                 instrument: Instrument object. Filter by this instrument.
                 start: Datetime. Filter candles with later time than 'start'.
+                end: Datetime. Filter candles with earlier time than 'end'.
                 order_by: String. Space delimited string of fields to order by.
+                granularity: String. Granularity of the querying candle.
 
         Returns:
             List of Candle objects satisfying the conditions (QuerySet).
     """
     candles = Candle.objects.all()
-    if 'instrument' in kwargs:
+    if kwargs.get('instrument') is not None:
         candles = candles.filter(instrument=kwargs.get('instrument'))
-    if 'start' in kwargs:
+    if kwargs.get('start') is not None:
         start_time = add_timezone(kwargs.get('start'))
         candles = candles.filter(start_time__gte=start_time)
-    if 'order_by' in kwargs:
+    if kwargs.get('end') is not None:
+        end_time = add_timezone(kwargs.get('end'))
+        candles = candles.filter(start_time__lte=end_time)
+    if kwargs.get('granularity') is not None:
+        candles = candles.filter(granularity=kwargs.get('granularity'))
+    if kwargs.get('order_by') is not None:
         candles = candles.order_by(kwargs.get('order_by'))
 
     return candles
 
 
-def get_last(instrument, granularity):
+def get_last(**kwargs):
     """ Retrieve the latest candle of given instrument and granularity.
 
         Args:
-            instrument: Instrument object.
-            granularity: String. The granularity of the candles.
+            kwargs: Named arguments for filtering candles.
+                instrument: Instrument object.
+                granularity: String. The granularity of the candles.
+                before: Datetime. Get the last candle before this time.
 
         Returns:
             Candle object if exists or None.
     """
-    candles = Candle.objects.filter(
-        instrument=instrument,
-        granularity=granularity
-    ).order_by('-start_time')
+    candles = get_candles(
+        instrument=kwargs.get('instrument'),
+        granularity=kwargs.get('granularity'),
+        end=kwargs.get('before'),
+        order_by='-start_time'
+    )
 
     if candles:
         return candles[0]

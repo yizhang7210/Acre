@@ -70,7 +70,7 @@ class Euler(threading.Thread):
         all_predictions = []
         for predictor in predictors.get_all():
             learner = Learner(instrument, predictor)
-            learner.learn()
+            learner.learn(before=self.prediction_date)
             profitable_change = learner.predict(features)
 
             all_predictions.append(predictions.create_one(

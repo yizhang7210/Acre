@@ -1,6 +1,7 @@
 """ This is algos.euler.learner module.
     This module is responsible for training the models and make predictions.
 """
+import datetime
 import decimal
 import itertools
 
@@ -60,6 +61,25 @@ class Learner:
 
         return all_params
 
+    def get_training_samples(self, end_date):
+        """ Retrieve all training samples before the end date.
+
+            Args:
+                before: Date object. Retrieve training samples before end_date.
+
+            Returns:
+                all_samples: List of TrainingSample.
+        """
+        last_date = None
+        if end_date is not None:
+            last_date = end_date - datetime.timedelta(1)
+        all_samples = ts.get_samples(
+            instrument=self.instrument,
+            end=last_date,
+            order_by='date'
+        )
+        return all_samples
+
     def learn(self, **kwargs):
         """ Use the training samples for the given instrument to build a
             learning model for the learner.
@@ -67,15 +87,17 @@ class Learner:
             Args:
                 Named arguments.
                     cv_fold: Integer. Number of folds for cross validation.
+                    before: Date object. Use samples before this date.
 
             Returns:
                 None.
         """
         cv_fold = kwargs.get('cv_fold') or 2
+        end_date = kwargs.get('before')
 
-        all_data = ts.get_samples(instrument=self.instrument, order_by='date')
-        features = [x.features for x in all_data]
-        targets = [x.target for x in all_data]
+        all_training_samples = self.get_training_samples(end_date)
+        features = [x.features for x in all_training_samples]
+        targets = [x.target for x in all_training_samples]
         best_score = 0
         best_params = {}
         for params in self.generate_all_param_combos():

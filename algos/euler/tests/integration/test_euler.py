@@ -2,12 +2,11 @@
 import datetime
 from decimal import Decimal
 
-from django.test import TestCase
-
 from algos.euler.euler import Euler
 from algos.euler.models import training_samples as ts
 from algos.euler.models import predictions, predictors
 from datasource.models import candles, instruments
+from django.test import TestCase
 
 from .test_setup import TestSetup
 
@@ -45,7 +44,7 @@ class EulerAlgoTest(TestCase):
         today = datetime.date(2017, 12, 6)
 
         # When
-        euler_thread = Euler(today)
+        euler_thread = Euler(today, cv_fold=2)
         euler_thread.run()
 
         # Then

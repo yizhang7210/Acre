@@ -42,7 +42,7 @@ def get_end_date_str():
         Returns:
             end_date: String. Formatted end date. e.g. '2015-09-08'
     """
-    return str(datetime.date.today() - datetime.timedelta(1))
+    return str(datetime.date.today())
 
 
 def import_daily_candles(conn):

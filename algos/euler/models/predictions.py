@@ -35,7 +35,7 @@ def create_one(**kwargs):
                 profitable_change: Decimal. Predicted profitable change in pips.
                 instrument: Instrument object.
                 predictor: Predictor object.
-                predictor_params: Dictionary. Parameters used for this prediction.
+                predictor_params: Dict. Parameters used for this prediction.
 
         Returns:
             Predicton object with the given fields.
@@ -68,3 +68,16 @@ def insert_many(predictions):
             predictions: List of Prediction objects to be inserted.
     """
     Prediction.objects.bulk_create(predictions)
+
+def upsert_one(**kwargs):
+    """ Insert or update a prediction.
+
+        Args:
+            Named arguments.
+                date: Date object. Date of the predicted changes.
+                profitable_change: Decimal. Predicted profitable change in pips.
+                instrument: Instrument object.
+                predictor: Predictor object.
+                predictor_params: Dict. Parameters used for this prediction.
+    """
+    Prediction.objects.update_or_create(**kwargs)

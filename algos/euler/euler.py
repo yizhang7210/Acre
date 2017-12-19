@@ -15,14 +15,17 @@ from datasource.models import candles, instruments
 class Euler(threading.Thread):
     """ Euler class. Implements the Euler algorithm"""
 
-    def __init__(self, new_date):
+    def __init__(self, new_date, **kwargs):
         """ Initialize the Euler class.
 
             Args:
                 new_date: Date object. The date to predict the rate changes.
+                Named arguments:
+                    cv_fold: Number of folds of cross validation. Default to 10.
         """
         threading.Thread.__init__(self)
         self.prediction_date = new_date
+        self.cv_fold = kwargs.get('cv_fold') or 10
 
     def run(self):
         """ Implements Thread.run. Runs Euler algo's daily update at End-of-Day.
@@ -36,8 +39,7 @@ class Euler(threading.Thread):
         transformer.run()
         for ins in instruments.get_all():
             features = self.gather_updated_features(ins)
-            all_predictions = self.get_all_prediction(ins, features)
-            predictions.insert_many(all_predictions)
+            self.update_all_prediction(ins, features)
 
     def gather_updated_features(self, instrument):
         """ Return the features for prediction from the most recent candle.
@@ -57,7 +59,7 @@ class Euler(threading.Thread):
         )
         return transformer.extract_features(last_candle)
 
-    def get_all_prediction(self, instrument, features):
+    def update_all_prediction(self, instrument, features):
         """ Return the list of predictions from all predictors.
 
             Args:
@@ -65,20 +67,17 @@ class Euler(threading.Thread):
                 features: List of Decimals. To be feed into the learning model.
 
             Returns:
-                all_predictions: List of Prediction objects. The predictions.
+                None.
         """
-        all_predictions = []
         for predictor in predictors.get_all():
             learner = Learner(instrument, predictor)
-            learner.learn(before=self.prediction_date)
+            learner.learn(before=self.prediction_date, cv_fold=self.cv_fold)
             profitable_change = learner.predict(features)
 
-            all_predictions.append(predictions.create_one(
+            predictions.upsert_one(
                 instrument=instrument,
                 predictor=predictor,
                 date=self.prediction_date,
                 profitable_change=profitable_change,
                 predictor_params=learner.model.get_params()
-            ))
-
-        return all_predictions
+            )

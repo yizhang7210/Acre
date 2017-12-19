@@ -6,10 +6,10 @@ import decimal
 import itertools
 
 import numpy as np
-from sklearn.model_selection import cross_val_score
-from sklearn.tree import DecisionTreeRegressor
 
 from algos.euler.models import training_samples as ts
+from sklearn.model_selection import cross_val_score
+from sklearn.tree import DecisionTreeRegressor
 
 TWO_PLACES = decimal.Decimal('0.01')
 
@@ -92,7 +92,7 @@ class Learner:
             Returns:
                 None.
         """
-        cv_fold = kwargs.get('cv_fold') or 2
+        cv_fold = kwargs.get('cv_fold')
         end_date = kwargs.get('before')
 
         all_training_samples = self.get_training_samples(end_date)

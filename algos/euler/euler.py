@@ -39,7 +39,7 @@ class Euler(threading.Thread):
         transformer.run()
         for ins in instruments.get_all():
             features = self.gather_updated_features(ins)
-            self.update_all_prediction(ins, features)
+            self.update_all_predictions(ins, features)
 
     def gather_updated_features(self, instrument):
         """ Return the features for prediction from the most recent candle.
@@ -59,7 +59,7 @@ class Euler(threading.Thread):
         )
         return transformer.extract_features(last_candle)
 
-    def update_all_prediction(self, instrument, features):
+    def update_all_predictions(self, instrument, features):
         """ Return the list of predictions from all predictors.
 
             Args:
@@ -74,10 +74,12 @@ class Euler(threading.Thread):
             learner.learn(before=self.prediction_date, cv_fold=self.cv_fold)
             profitable_change = learner.predict(features)
 
-            predictions.upsert_one(
+            new_prediction = predictions.create_one(
                 instrument=instrument,
                 predictor=predictor,
                 date=self.prediction_date,
                 profitable_change=profitable_change,
                 predictor_params=learner.model.get_params()
             )
+
+            predictions.upsert(new_prediction)

@@ -1,9 +1,8 @@
 """ Data model and data access methods for Prediction for Euler algo.
 """
+from datasource.models.instruments import Instrument
 from django.contrib.postgres.fields import JSONField
 from django.db import models
-
-from datasource.models.instruments import Instrument
 
 from .predictors import Predictor
 
@@ -69,15 +68,24 @@ def insert_many(predictions):
     """
     Prediction.objects.bulk_create(predictions)
 
-def upsert_one(**kwargs):
+def upsert(prediction):
     """ Insert or update a prediction.
 
         Args:
-            Named arguments.
-                date: Date object. Date of the predicted changes.
-                profitable_change: Decimal. Predicted profitable change in pips.
-                instrument: Instrument object.
-                predictor: Predictor object.
-                predictor_params: Dict. Parameters used for this prediction.
+            prediction: Prediction Object to be upserted according to the unique
+                together constraint on date, instrument and predictor.
+
+        Returns:
+            None.
     """
-    Prediction.objects.update_or_create(**kwargs)
+    existing = Prediction.objects.filter(
+        date=prediction.date,
+        instrument=prediction.instrument,
+        predictor=prediction.predictor
+    )
+    if len(existing) > 0:
+        existing.profitable_change = prediction.profitable_change
+        existing.predictor_params = prediction.predictor_params
+        existing.update()
+    else:
+        prediction.save()

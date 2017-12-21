@@ -1,8 +1,9 @@
 """ Data model and data access methods for Prediction for Euler algo.
 """
-from datasource.models.instruments import Instrument
 from django.contrib.postgres.fields import JSONField
 from django.db import models
+
+from datasource.models.instruments import Instrument
 
 from .predictors import Predictor
 
@@ -83,7 +84,7 @@ def upsert(prediction):
         instrument=prediction.instrument,
         predictor=prediction.predictor
     )
-    if len(existing) > 0:
+    if existing:
         existing.profitable_change = prediction.profitable_change
         existing.predictor_params = prediction.predictor_params
         existing.update()

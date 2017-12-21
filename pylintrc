@@ -2,7 +2,7 @@
 ignored-modules = numpy
 
 [BASIC]
-good-names = logger, i, _, o, h, l, c, oc, t
+good-names = logger, i, _, o, h, l, c, oc, t, do
 
 [SIMILARITIES]
 min-similarity-lines = 10

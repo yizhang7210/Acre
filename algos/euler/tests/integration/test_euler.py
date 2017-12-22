@@ -1,12 +1,14 @@
 # pylint: disable=missing-docstring
 import datetime
+import math
 from decimal import Decimal
+
+from django.test import TestCase
 
 from algos.euler.euler import Euler
 from algos.euler.models import training_samples as ts
 from algos.euler.models import predictions, predictors
 from datasource.models import candles, instruments
-from django.test import TestCase
 
 from .test_setup import TestSetup
 
@@ -51,3 +53,4 @@ class EulerAlgoTest(TestCase):
         new_predictions = predictions.get_all(['date'])
         self.assertEqual(len(new_predictions), 1)
         self.assertEqual(new_predictions[0].date, today)
+        self.assertFalse(math.isnan(new_predictions[0].score))

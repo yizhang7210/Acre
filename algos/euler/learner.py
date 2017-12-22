@@ -90,7 +90,7 @@ class Learner:
                     before: Date object. Use samples before this date.
 
             Returns:
-                None.
+                best_score: float. Best cross validation score from learning.
         """
         cv_fold = kwargs.get('cv_fold')
         end_date = kwargs.get('before')
@@ -110,6 +110,8 @@ class Learner:
 
         self.model.set_params(**best_params)
         self.model.fit(features, targets)
+
+        return best_score
 
     def predict(self, features):
         """ Use trained model to predict profitable change given the features.

@@ -17,6 +17,7 @@ class Prediction(models.Model):
         Instrument,
         on_delete=models.PROTECT
     )
+    score = models.FloatField()
     predictor = models.ForeignKey(
         Predictor,
         on_delete=models.PROTECT
@@ -34,6 +35,7 @@ def create_one(**kwargs):
                 date: Date object. Date of the predicted changes.
                 profitable_change: Decimal. Predicted profitable change in pips.
                 instrument: Instrument object.
+                score: Float. The cross validation score of this prediction.
                 predictor: Predictor object.
                 predictor_params: Dict. Parameters used for this prediction.
 

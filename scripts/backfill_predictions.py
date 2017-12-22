@@ -9,7 +9,7 @@ from algos.euler.models import training_samples as ts
 # To implement RunScript interface.
 def run():
     start = datetime.date(2017, 11, 1)
-    end = datetime.date(2017, 12, 18)
+    end = datetime.date(2017, 12, 24)
     all_dates = []
     for sample in ts.get_samples(start=start, end=end, order_by='date'):
         all_dates.append(sample.date)

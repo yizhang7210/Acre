@@ -85,8 +85,9 @@ def upsert(prediction):
         predictor=prediction.predictor
     )
     if existing:
+        existing = existing[0]
         existing.profitable_change = prediction.profitable_change
         existing.predictor_params = prediction.predictor_params
-        existing.update()
+        existing.save()
     else:
         prediction.save()

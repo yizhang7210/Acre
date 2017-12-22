@@ -69,9 +69,10 @@ class Euler(threading.Thread):
             Returns:
                 None.
         """
+        yesterday = self.prediction_date - datetime.timedelta(1)
         for predictor in predictors.get_all():
             learner = Learner(instrument, predictor)
-            learner.learn(before=self.prediction_date, cv_fold=self.cv_fold)
+            learner.learn(before=yesterday, cv_fold=self.cv_fold)
             profitable_change = learner.predict(features)
 
             new_prediction = predictions.create_one(

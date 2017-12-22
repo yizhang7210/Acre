@@ -6,10 +6,10 @@ import decimal
 import itertools
 
 import numpy as np
-
-from algos.euler.models import training_samples as ts
 from sklearn.model_selection import cross_val_score
 from sklearn.tree import DecisionTreeRegressor
+
+from algos.euler.models import training_samples as ts
 
 TWO_PLACES = decimal.Decimal('0.01')
 
@@ -98,7 +98,7 @@ class Learner:
         all_training_samples = self.get_training_samples(end_date)
         features = [x.features for x in all_training_samples]
         targets = [x.target for x in all_training_samples]
-        best_score = 0
+        best_score = float('-inf')
         best_params = {}
         for params in self.generate_all_param_combos():
             self.model.set_params(**params)

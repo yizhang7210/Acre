@@ -17,12 +17,12 @@ def get_credentials():
     """
     acre_env = os.environ.get('ACRE_ENV')
 
-    if acre_env == 'PROD' or acre_env == 'TEST':
+    if acre_env is None or acre_env == 'LOCAL':
+        creds = json.load(open('{0}/credentials.json'.format(APP_DIR), 'r'))
+    else:
         creds = {
             "Token-Trade": os.environ.get('TOKEN_TRADE'),
             "Token-Game": os.environ.get('TOKEN_GAME')
             }
-    else:
-        creds = json.load(open('{0}/credentials.json'.format(APP_DIR), 'r'))
 
     return creds

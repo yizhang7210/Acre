@@ -48,4 +48,3 @@ PostgresSQL:
 
 Deploy Django App to ElasticBeanstalk:
 - [AWS Doc](http://docs.aws.amazon.com/elasticbeanstalk/latest/dg/create-deploy-python-apps.html)
-

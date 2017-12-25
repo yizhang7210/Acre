@@ -3,23 +3,22 @@
 """
 import datetime
 
-from django_cron import CronJobBase, Schedule
+from django.http import HttpResponse
+from django.views.decorators.csrf import csrf_exempt
+from django.views.decorators.http import require_POST
 
 from algos import calendar
 from algos.euler.euler import Euler
 from datasource import rates
 
 
-class AcreAlgos(CronJobBase):
-    """ The entry point of all algorithms in Acre"""
-    schedule = Schedule(run_at_times=['17:01'])
-    code = 'all_acre_algos'
-
-    #pylint: disable=no-self-use
-    def do(self):
-        """ Implementing the CronJobBase base class/interface."""
-        if calendar.is_week_day(datetime.date.today()):
-            run_end_of_day()
+@require_POST
+@csrf_exempt
+def main(request):
+    """ Main entry point for all algos."""
+    if calendar.is_week_day(datetime.date.today()):
+        run_end_of_day()
+    return HttpResponse('OK')
 
 def run_end_of_day():
     """ The actual process of End-of-Day update"""

@@ -23,6 +23,6 @@ def get_credentials():
         creds = {
             "Token-Trade": os.environ.get('TOKEN_TRADE'),
             "Token-Game": os.environ.get('TOKEN_GAME')
-            }
+        }
 
     return creds

@@ -51,7 +51,6 @@ DJANGO_APPS = (
 
 THIRD_PARTY_APPS = (
     'django_extensions',
-    'django_cron',
 )
 
 LOCAL_APPS = (
@@ -155,6 +154,3 @@ MEDIA_URL = '/media/'
 
 MEDIA_ROOT = str(APPS_DIR('media'))
 
-CRON_CLASSES = [
-    'algos.algos.AcreAlgos',
-]

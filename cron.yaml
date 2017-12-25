@@ -1,0 +1,5 @@
+version: 1
+cron:
+ - name: "overall-eod-of-day"
+   url: "/algos"
+   schedule: "01 22 * * *"

@@ -19,7 +19,7 @@ Project Setup
 - Under main project folder, go to your virtual env:
     - `virtualenv env`
     - `source env/bin/activate`
-- Install everything you need: `pip3 install -r requirements/local.txt`
+- Install everything you need: `pip3 install -r requirements.txt`
 - Setup your PostgresSQL database according to the Resources section below
 as well as the configurations in `acre/settings/local.py`
 - Remeber to give your user database creation access: `ALTER USER acreuser CREATEDB;`
@@ -40,8 +40,12 @@ Django App:
 - [Modern Django](https://medium.com/@djstein/modern-django-part-0-introduction-and-initial-setup-657df48f08f8)
 - [Start Django](https://realpython.com/learn/start-django/)
 
-REST API in Django
+REST API in Django:
 - [A Test Driven Approach](https://scotch.io/tutorials/build-a-rest-api-with-django-a-test-driven-approach-part-1)
 
-PostgresSQL
+PostgresSQL:
 - [Basic Setup](https://www.digitalocean.com/community/tutorials/how-to-use-postgresql-with-your-django-application-on-ubuntu-16-04)
+
+Deploy Django App to ElasticBeanstalk:
+- [AWS Doc](http://docs.aws.amazon.com/elasticbeanstalk/latest/dg/create-deploy-python-apps.html)
+

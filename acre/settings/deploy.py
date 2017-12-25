@@ -6,7 +6,7 @@ DATABASES = {
         'NAME': 'circle_test',
         'HOST': '127.0.0.1',
         'PORT': '5432',
-        'USERNAME': 'circleci',
+        'USER': 'circleci',
         'PASSWORD': '',
     }
 }

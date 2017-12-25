@@ -140,10 +140,10 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 
-STATIC_ROOT = str(ROOT_DIR('staticfiles'))
+STATIC_ROOT = str(ROOT_DIR('static'))
 
 STATICFILES_DIRS = (
-    str(APPS_DIR.path('static')),
+    #str(APPS_DIR.path('static')),
 )
 
 STATICFILES_FINDERS = (

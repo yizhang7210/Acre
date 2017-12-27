@@ -4,27 +4,32 @@
 
 import http.client
 import json
+import os
 import urllib
 from datetime import datetime
 from decimal import Decimal
+from enum import Enum
 
 import pytz
 
-from datasource import Granularity, get_credentials
+from datasource import Granularity
 from datasource.models import candles, instruments
 
 SIX_PLACES = Decimal('0.000001')
 
 # OANDA constants
-GAME = 'Game'
 GAME_URL = "api-fxpractice.oanda.com"
-
-TRADE = 'Trade'
 TRADE_URL = "api-fxtrade.oanda.com"
 
-ACCOUNT_INFO = get_credentials()
-GAME_TOKEN = ACCOUNT_INFO.get('Token-Game')
-TRADE_TOKEN = ACCOUNT_INFO.get('Token-Trade')
+GAME_TOKEN = os.environ.get('TOKEN_GAME')
+TRADE_TOKEN = os.environ.get('TOKEN_TRADE')
+
+class Env(Enum):
+    """ OANDA Env. Can be either GAME or TRADE
+    """
+    GAME = 'Game'
+    TRADE = 'Trade'
+
 
 class OandaCandle:
     """ The OandaCandle class represents a candle returned form OANDA's API.
@@ -54,21 +59,22 @@ class OandaConnection:
     """ The OandaConnection class, responsible for managing HTTPS connections
         with OANDA.
     """
+    # pylint: disable=too-few-public-methods
 
     def __init__(self, environment):
         """ Initialize the OandaConnection class with existing account.
 
             Args:
-                environment: String. One of oanda.GAME or oanda.TRADE.
+                environment: Env. One of Env.GAME or Env.TRADE.
         """
-        if environment == GAME:
+        if environment == Env.GAME:
             self.url = GAME_URL
             self.access_token = GAME_TOKEN
-        elif environment == TRADE:
+        elif environment == Env.TRADE:
             self.url = TRADE_URL
             self.access_token = TRADE_TOKEN
         else:
-            raise TypeError('Environment has to be oanda.GAME or oanda.TRADE')
+            raise TypeError('Environment has to be Env.GAME or Env.TRADE')
 
         self.conn = http.client.HTTPSConnection(self.url)
         self.headers = {
@@ -77,20 +83,6 @@ class OandaConnection:
         }
 
         return
-
-    def get_environment(self):
-        """ Returns the environment of the connection, either GAME or TRADE.
-
-            Args:
-                None.
-
-            Returns:
-                String. oanda.GAME for game, or oanda.TRADE for trade.
-        """
-        if self.url == GAME_URL:
-            return GAME
-        elif self.url == TRADE_URL:
-            return TRADE
 
     def fetch_daily_candles(self, instrument, start_date, end_date):
         """ Obtain a list of daily bid-ask candles for the given instrument.

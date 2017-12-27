@@ -70,7 +70,7 @@ def import_daily_candles(conn):
 def main():
     """ Main: Fetch daily candles util yesterday for all instruments.
     """
-    oanda_conn = oanda.OandaConnection(oanda.GAME)
+    oanda_conn = oanda.OandaConnection(oanda.Env.GAME)
     all_candles = import_daily_candles(oanda_conn)
     candles.insert_many(all_candles)
 

@@ -45,7 +45,7 @@ class OandaTest(TestCase):
             oanda.OandaConnection('InvalidEnvironment')
 
         # Game
-        oanda_conn = oanda.OandaConnection(oanda.GAME)
+        oanda_conn = oanda.OandaConnection(oanda.Env.GAME)
         self.assertEqual(oanda_conn.url, oanda.GAME_URL)
         self.assertEqual(oanda_conn.access_token, oanda.GAME_TOKEN)
         self.assertIsNotNone(oanda_conn.conn)

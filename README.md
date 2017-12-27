@@ -23,6 +23,7 @@ Project Setup
 - Setup your PostgresSQL database according to the Resources section below
 as well as the configurations in `acre/settings/local.py`
 - Remeber to give your user database creation access: `ALTER USER acreuser CREATEDB;`
+- Set up your environment variables according to `docs/dev/Envs.md#local`
 - Catch up on your database schema: `./manage.py migrate`
 - You should be good to go: make sure `./manage.py test` all pass
 
@@ -33,6 +34,19 @@ Code Commit Checklist
 - [ ] Run `pylint <app> --load-plugins pylint_django` on all apps with 10.0 score.
 - [ ] Update documentation whenever appropriate.
 
+
+Deployment
+----------
+- We use Circle CI for continuous integration and deployment. See `.circleci/config.yml`
+for the configurations. For Circle CI, see the required environment variables in
+`docs/dev/Envs.md#deploy`.
+- For each environment (dev and prod), there are technically two applications
+that get deployed to AWS. One in a worker tier that runs the end of day process
+(at 17:00 Eastern time) for all algorithms, the other in a web server that
+provides the predictions API.
+- The two applications are tied to the same database in AWS RDS.
+- For the worker tier, see the required environment variables in `docs/dev/Envs.md#worker`
+- For the web server, see the required environment variables in `docs/dev/Envs.md#server`
 
 Resources
 ---------

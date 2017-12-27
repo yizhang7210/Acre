@@ -55,8 +55,7 @@ class Euler(threading.Thread):
         last_candle = candles.get_last(
             instrument=instrument,
             granularity=Granularity.DAILY.value,
-            before=cutoff_time
-        )
+            before=cutoff_time)
         return transformer.extract_features(last_candle)
 
     def update_all_predictions(self, instrument, features):
@@ -81,7 +80,6 @@ class Euler(threading.Thread):
                 predictor=predictor,
                 score=best_score,
                 profitable_change=profitable_change,
-                predictor_params=learner.model.get_params()
-            )
+                predictor_params=learner.model.get_params())
 
             predictions.upsert(new_prediction)

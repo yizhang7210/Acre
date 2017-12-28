@@ -11,10 +11,7 @@ class Candle(models.Model):
     """
     # pylint: disable=too-many-instance-attributes
 
-    instrument = models.ForeignKey(
-        Instrument,
-        on_delete=models.PROTECT
-    )
+    instrument = models.ForeignKey(Instrument, on_delete=models.PROTECT)
     start_time = models.DateTimeField()
     volume = models.PositiveIntegerField()
 
@@ -31,7 +28,7 @@ class Candle(models.Model):
     close_ask = models.DecimalField(max_digits=12, decimal_places=6)
 
     class Meta:
-        unique_together = (('instrument', 'start_time', 'granularity'),)
+        unique_together = (('instrument', 'start_time', 'granularity'), )
 
 
 def create_one(**kwargs):
@@ -102,8 +99,8 @@ def get_candles(**kwargs):
                 instrument: Instrument object. Filter by this instrument.
                 start: Datetime. Filter candles with later time than 'start'.
                 end: Datetime. Filter candles with earlier time than 'end'.
-                order_by: String. Space delimited string of fields to order by.
                 granularity: String. Granularity of the querying candle.
+                order_by: String. Space delimited string of fields to order by.
 
         Returns:
             List of Candle objects satisfying the conditions (QuerySet).
@@ -141,8 +138,7 @@ def get_last(**kwargs):
         instrument=kwargs.get('instrument'),
         granularity=kwargs.get('granularity'),
         end=kwargs.get('before'),
-        order_by='-start_time'
-    )
+        order_by='-start_time')
 
     if candles:
         return candles[0]

@@ -1,5 +1,5 @@
-""" This is the datasource module.
-    This module is responsible for common setups of data sources.
+""" This is the datasource package.
+    This package is responsible for retrieve historical rates from a data source.
 """
 from enum import Enum
 

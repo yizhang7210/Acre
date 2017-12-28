@@ -25,7 +25,6 @@ if READ_DOT_ENV_FILE:
     env.read_env(env_file)
     print('The .env file has been loaded. See base.py for more information')
 
-
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/1.11/howto/deployment/checklist/
 
@@ -36,7 +35,6 @@ SECRET_KEY = 'kh+n-p+wicf&in532@&w9^8b*l)^5#_$ym%cch8nlgv8*ri_!2'
 DEBUG = env.bool('DJANGO_DEBUG', False)
 
 ALLOWED_HOSTS = []
-
 
 # Application definition
 
@@ -51,6 +49,8 @@ DJANGO_APPS = (
 
 THIRD_PARTY_APPS = (
     'django_extensions',
+    'rest_framework',
+    'rest_framework_swagger',
 )
 
 LOCAL_APPS = (
@@ -90,7 +90,6 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'acre.wsgi.application'
 
-
 # Database
 # https://docs.djangoproject.com/en/1.11/ref/settings/#databases
 
@@ -99,7 +98,6 @@ DATABASES = {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
     }
 }
-
 
 # Password validation
 # https://docs.djangoproject.com/en/1.11/ref/settings/#auth-password-validators
@@ -119,7 +117,6 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-
 # Internationalization
 # https://docs.djangoproject.com/en/1.11/topics/i18n/
 
@@ -133,7 +130,6 @@ USE_L10N = True
 
 USE_TZ = True
 
-
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.11/howto/static-files/
 
@@ -141,9 +137,7 @@ STATIC_URL = '/static/'
 
 STATIC_ROOT = str(ROOT_DIR('static'))
 
-STATICFILES_DIRS = (
-    #str(APPS_DIR.path('static')),
-)
+STATICFILES_DIRS = ()
 
 STATICFILES_FINDERS = (
     'django.contrib.staticfiles.finders.FileSystemFinder',
@@ -153,4 +147,3 @@ STATICFILES_FINDERS = (
 MEDIA_URL = '/media/'
 
 MEDIA_ROOT = str(APPS_DIR('media'))
-

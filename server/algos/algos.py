@@ -3,22 +3,23 @@
 """
 import datetime
 
+from algos import calendar
+from algos.euler.runner import Euler
+from datasource import rates
 from django.http import HttpResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_POST
-
-from algos import calendar
-from algos.euler.euler import Euler
-from datasource import rates
 
 
 @require_POST
 @csrf_exempt
 def main(request):
+    # pylint: disable=unused-argument
     """ Main entry point for all algos."""
     if calendar.is_week_day(datetime.date.today()):
         run_end_of_day()
     return HttpResponse('OK')
+
 
 def run_end_of_day():
     """ The actual process of End-of-Day update"""

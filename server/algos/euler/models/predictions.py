@@ -1,9 +1,8 @@
 """ Data model and data access methods for Prediction for Euler algo.
 """
+from datasource.models.instruments import Instrument
 from django.contrib.postgres.fields import JSONField
 from django.db import models
-
-from datasource.models.instruments import Instrument
 
 from .predictors import Predictor
 
@@ -13,19 +12,14 @@ class Prediction(models.Model):
     """
     date = models.DateField()
     profitable_change = models.DecimalField(max_digits=7, decimal_places=2)
-    instrument = models.ForeignKey(
-        Instrument,
-        on_delete=models.PROTECT
-    )
+    instrument = models.ForeignKey(Instrument, on_delete=models.PROTECT)
     score = models.FloatField()
-    predictor = models.ForeignKey(
-        Predictor,
-        on_delete=models.PROTECT
-    )
+    predictor = models.ForeignKey(Predictor, on_delete=models.PROTECT)
     predictor_params = JSONField()
 
     class Meta:
-        unique_together = (('predictor', 'instrument', 'date'),)
+        unique_together = (('predictor', 'instrument', 'date'), )
+
 
 def create_one(**kwargs):
     """ Create a Prediction object with the given fields.
@@ -44,6 +38,33 @@ def create_one(**kwargs):
     """
     return Prediction(**kwargs)
 
+
+def get_predictions(**kwargs):
+    """ Retrieve a list of predictions with given conditions.
+
+        Args:
+            kwargs: Named arguments for filtering predictions.
+                instrument: Instrument object.
+                start: Datetime. Filter predictions with later time than 'start'.
+                end: Datetime. Filter predictions with earlier time than 'end'.
+                order_by: String. Space delimited string of fields to order by.
+
+        Returns:
+            List of Prediction objects satisfying the conditions (QuerySet).
+    """
+    predictions = Prediction.objects.all()
+    if kwargs.get('instrument') is not None:
+        predictions = predictions.filter(instrument=kwargs.get('instrument'))
+    if kwargs.get('start') is not None:
+        predictions = predictions.filter(date__gte=kwargs.get('start'))
+    if kwargs.get('end') is not None:
+        predictions = predictions.filter(date__lte=kwargs.get('end'))
+    if kwargs.get('order_by') is not None:
+        predictions = predictions.order_by(kwargs.get('order_by'))
+
+    return predictions
+
+
 def get_all(order_by):
     """ Returns all predictions in the database.
 
@@ -55,6 +76,7 @@ def get_all(order_by):
     """
     return Prediction.objects.all().order_by(*order_by)
 
+
 def delete_all():
     """ Delete all predictions in the database.
 
@@ -63,6 +85,7 @@ def delete_all():
     """
     return Prediction.objects.all().delete()
 
+
 def insert_many(predictions):
     """ Bulk insert a list of predictions.
 
@@ -70,6 +93,7 @@ def insert_many(predictions):
             predictions: List of Prediction objects to be inserted.
     """
     Prediction.objects.bulk_create(predictions)
+
 
 def upsert(prediction):
     """ Insert or update a prediction.
@@ -84,8 +108,7 @@ def upsert(prediction):
     existing = Prediction.objects.filter(
         date=prediction.date,
         instrument=prediction.instrument,
-        predictor=prediction.predictor
-    )
+        predictor=prediction.predictor)
     if existing:
         existing = existing[0]
         existing.profitable_change = prediction.profitable_change

@@ -12,4 +12,4 @@ DATABASES = {
     }
 }
 
-ALLOWED_HOSTS = [".us-east-2.elasticbeanstalk.com", "localhost"]
+ALLOWED_HOSTS = [".acre.one", ".us-east-2.elasticbeanstalk.com", "localhost"]

@@ -3,12 +3,13 @@
 """
 import datetime
 
-from algos import calendar
-from algos.euler.runner import Euler
-from datasource import rates
 from django.http import HttpResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_POST
+
+from algos import calendar
+from algos.euler.runner import Euler
+from datasource import rates
 
 
 @require_POST
@@ -24,6 +25,6 @@ def main(request):
 def run_end_of_day():
     """ The actual process of End-of-Day update"""
     day_to_predict = calendar.get_trading_day(datetime.datetime.now())
-    rates.main()
+    rates.run()
     euler_thread = Euler(day_to_predict)
     euler_thread.start()

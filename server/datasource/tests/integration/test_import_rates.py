@@ -4,10 +4,10 @@ from decimal import Decimal
 from unittest.mock import patch
 
 import pytz
+from django.test import TestCase
 
 from datasource import rates
 from datasource.models import candles, instruments
-from django.test import TestCase
 
 SIX_PLACES = Decimal('0.000001')
 
@@ -34,7 +34,7 @@ class RatesImportTest(TestCase):
         # pylint: disable=unused-argument
 
         # When
-        rates.main()
+        rates.run()
         expected_start_time = datetime(
             2017, 7, 6, 21, tzinfo=pytz.timezone('UTC'))
         expected_low_ask = Decimal(1.13823).quantize(SIX_PLACES)

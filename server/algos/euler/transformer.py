@@ -5,9 +5,8 @@
 import datetime
 import decimal
 
+from algos.euler.models import training_samples as ts
 from datasource.models import candles, instruments
-
-from .models import training_samples as ts
 
 TWO_PLACES = decimal.Decimal('0.01')
 
@@ -78,8 +77,7 @@ def build_sample_row(candle_previous, candle_next):
         instrument=candle_next.instrument,
         date=candle_next.start_time.date() + datetime.timedelta(1),
         features=extract_features(candle_previous),
-        target=get_profitable_change(candle_next)
-    )
+        target=get_profitable_change(candle_next))
 
 
 def get_start_time(instrument):
@@ -112,13 +110,9 @@ def run():
     for instrument in instruments.get_all():
         start_time = get_start_time(instrument)
         new_candles = candles.get_candles(
-            instrument=instrument,
-            start=start_time,
-            order_by='start_time'
-        )
+            instrument=instrument, start=start_time, order_by='start_time')
         for i in range(len(new_candles) - 1):
             all_new_samples.append(
-                build_sample_row(new_candles[i], new_candles[i + 1])
-            )
+                build_sample_row(new_candles[i], new_candles[i + 1]))
 
     ts.insert_many(all_new_samples)

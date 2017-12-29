@@ -2,8 +2,8 @@
 
 import datetime
 
-from algos.euler.euler import Euler
 from algos.euler.models import training_samples as ts
+from algos.euler.runner import Euler
 
 
 # To implement RunScript interface.

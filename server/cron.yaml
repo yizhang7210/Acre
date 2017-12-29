@@ -1,5 +1,5 @@
 version: 1
 cron:
  - name: "overall-eod-of-day"
-   url: "/algos"
+   url: "/api/v1/algos/update/end_of_day"
    schedule: "01 22 * * *"

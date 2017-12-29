@@ -24,9 +24,10 @@ jobs:
       - run:
           name: Install Dependencies
           command: |
+            cd server
             python3 -m venv venv
             . venv/bin/activate
-            pip install -r server/requirements.txt
+            pip install -r requirements.txt
 
       - save_cache:
           paths:
@@ -36,13 +37,14 @@ jobs:
       - run:
           name: Run Tests
           command: |
-            . venv/bin/activate
             cd server
+            . venv/bin/activate
             python manage.py test
 
       - deploy:
-          name: Deploy to AWS
+          name: Deploy worker and server to AWS
           command: |
-            . venv/bin/activate
             cd server
+            . venv/bin/activate
             sh deploy/deploy.sh
+

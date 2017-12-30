@@ -12,8 +12,19 @@ from django.http import HttpResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_POST
 from rest_framework import status
+from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework.views import APIView
+
+
+class InstrumentsView(APIView):
+    """ List all supported trading instruments.
+    """
+
+    def get(self, request):
+        """ GET a list of all supported trading instruments.
+        """
+        return datasource_views.get_all_instruments()
 
 
 class PredictedChangesView(APIView):
@@ -49,16 +60,6 @@ class PredictedChangesView(APIView):
             status=status.HTTP_404_NOT_FOUND)
 
 
-class InstrumentsView(APIView):
-    """ List supported trading instruments.
-    """
-
-    def get(self, request):
-        """ GET a list of supported trading instruments.
-        """
-        return datasource_views.get_all_instruments()
-
-
 class ProfitableChangesView(APIView):
     """ Actual profitable changes for a given period of time.
     """
@@ -89,6 +90,14 @@ class ProfitableChangesView(APIView):
         return Response(
             data={'message': "Specified granularity is not supported."},
             status=status.HTTP_404_NOT_FOUND)
+
+
+@api_view(['GET'])
+def get_all_algos(request):
+    # pylint: disable=unused-argument
+    """ List all supported algorithms.
+    """
+    return Response([{'name': 'Euler', 'description': 'One day auto-regression.'}])
 
 
 @require_POST

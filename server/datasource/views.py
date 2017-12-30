@@ -7,7 +7,7 @@ from rest_framework.response import Response
 
 
 def get_all_instruments():
-    """ GET a list of supported trading instruments.
+    """ GET a list of all supported trading instruments.
     """
     serializer = InstrumentSerializer(instruments.get_all(), many=True)
     return Response(serializer.data)

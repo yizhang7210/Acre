@@ -12,5 +12,5 @@ api_v1_patterns = [
 ]
 
 urlpatterns = [
-    path('api/v1/', include(api_v1_patterns)),
+    path('v1/', include(api_v1_patterns)),
 ]

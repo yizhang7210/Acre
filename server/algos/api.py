@@ -6,6 +6,7 @@ import datetime
 from algos import Algos, calendar
 from algos.euler import views as euler_views
 from algos.euler.runner import Euler
+from datasource import views as datasource_views
 from datasource import Granularity, rates
 from django.http import HttpResponse
 from django.views.decorators.csrf import csrf_exempt
@@ -46,6 +47,16 @@ class PredictedChangesView(APIView):
         return Response(
             data={'message': "Specified algo is not supported."},
             status=status.HTTP_404_NOT_FOUND)
+
+
+class InstrumentsView(APIView):
+    """ List supported trading instruments.
+    """
+
+    def get(self, request):
+        """ GET a list of supported trading instruments.
+        """
+        return datasource_views.get_all_instruments()
 
 
 class ProfitableChangesView(APIView):

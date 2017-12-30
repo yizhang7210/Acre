@@ -9,6 +9,7 @@ api_v1_patterns = [
     path('profitable_changes', api.ProfitableChangesView.as_view()),
     path('algos/update/end_of_day', api.end_of_day_update),
     path('algos/<str:algo>/predicted_changes', api.PredictedChangesView.as_view()),
+    path('instruments', api.InstrumentsView.as_view()),
 ]
 
 urlpatterns = [

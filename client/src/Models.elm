@@ -1,12 +1,14 @@
 module Models exposing (..)
 
-import RemoteData exposing (WebData)
-
 
 type alias Model =
-    { instruments : WebData (List Instrument)
-    , algos : WebData (List Algo)
+    { instruments : List String
+    , algos : List String
     }
+
+
+type alias Named a =
+    { a | name : String }
 
 
 type alias Algo =
@@ -19,6 +21,6 @@ type alias Instrument =
 
 initialModel : Model
 initialModel =
-    { instruments = RemoteData.Loading
-    , algos = RemoteData.Loading
+    { instruments = []
+    , algos = []
     }

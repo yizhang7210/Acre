@@ -1,60 +1,36 @@
 module Views.Summary exposing (..)
 
-import Html exposing (Html, div, text, ul, li)
+import Html exposing (..)
+import Html.Attributes exposing (..)
 import Msgs exposing (Msg)
 import Models exposing (Model, Instrument, Algo)
-import RemoteData exposing (WebData)
 
 
 view : Model -> Html Msg
 view model =
     div []
-        [ maybeList model.instruments
-        , maybeList2 model.algos
+        [ table [ style [ ( "text-align", "center" ) ] ]
+            [ thead [] [ generateHeader model.instruments ]
+            , tbody [] [ generateRows model ]
+            ]
         ]
 
 
-list : List Instrument -> Html Msg
-list ins =
-    ins
-        |> List.map (\l -> li [] [ text l.name ])
-        |> ul []
+generateRows : Model -> Html Msg
+generateRows model =
+    tr []
+        [ td [] [ text "Euler" ]
+        , td [] [ text "0.1" ]
+        , td [] [ text "0.2" ]
+        , td [] [ text "0.3" ]
+        , td [] [ text "0.4" ]
+        , td [] [ text "0.5" ]
+        ]
 
 
-maybeList : WebData (List Instrument) -> Html Msg
-maybeList response =
-    case response of
-        RemoteData.NotAsked ->
-            text ""
-
-        RemoteData.Loading ->
-            text "Loading..."
-
-        RemoteData.Success ins ->
-            list ins
-
-        RemoteData.Failure error ->
-            text (toString error)
-
-
-list2 : List Algo -> Html Msg
-list2 ins =
-    ins
-        |> List.map (\l -> li [] [ text l.name ])
-        |> ul []
-
-
-maybeList2 : WebData (List Algo) -> Html Msg
-maybeList2 response =
-    case response of
-        RemoteData.NotAsked ->
-            text ""
-
-        RemoteData.Loading ->
-            text "Loading..."
-
-        RemoteData.Success algo ->
-            list2 algo
-
-        RemoteData.Failure error ->
-            text (toString error)
+generateHeader : List String -> Html Msg
+generateHeader instruments =
+    instruments
+        |> List.map (\ins -> th [] [ text ins ])
+        |> (::) (th [] [])
+        |> tr []

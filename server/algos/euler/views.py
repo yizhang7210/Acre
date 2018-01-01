@@ -15,7 +15,12 @@ def get_predicted_changes(query_params):
         start=query_params.get('start'),
         end=query_params.get('end'),
         order_by=query_params.get('order_by') or 'date')
-    serializer = PredictionSerializer(all_predictions[:200], many=True)
+    limit = query_params.get('limit')
+    if limit is None or int(limit) > 200:
+        limit = 200
+    else:
+        limit = int(limit)
+    serializer = PredictionSerializer(all_predictions[:limit], many=True)
     return Response(serializer.data)
 
 
@@ -27,5 +32,10 @@ def get_actual_changes(query_params):
         start=query_params.get('start'),
         end=query_params.get('end'),
         order_by=query_params.get('order_by') or 'date')
-    serializer = PriceChangeSerializer(all_changes[:200], many=True)
+    limit = query_params.get('limit')
+    if limit is None or int(limit) > 200:
+        limit = 200
+    else:
+        limit = int(limit)
+    serializer = PriceChangeSerializer(all_changes[:limit], many=True)
     return Response(serializer.data)

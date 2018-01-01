@@ -42,6 +42,7 @@ class PredictedChangesView(APIView):
             - end: Last date of the predictions, e.g. '2017-12-09'
             - order_by: Key to sort the predictions (prefix a minus sign for
                 descending), e.g. '-date'. Default is date, ascending.
+            - limit: Number of predictions to limit the reponse by (max 200).
 
             For algorithm Euler, each prediction includes:
 
@@ -75,6 +76,7 @@ class ProfitableChangesView(APIView):
             - end: Last date of the profitable changes, e.g. '2017-12-09'
             - order_by: Key to sort the profitable changes (prefix a minus sign
                 for descending), e.g. '-date'. Default is date, ascending.
+            - limit: Number of changes to limit the reponse by (max 200).
 
             Each daily profitable change includes:
 

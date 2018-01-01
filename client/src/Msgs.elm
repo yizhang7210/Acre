@@ -1,9 +1,10 @@
 module Msgs exposing (..)
 
-import Models exposing (Instrument, Algo)
+import Models exposing (Prediction, Named)
 import RemoteData exposing (WebData)
 
 
 type Msg
-    = OnFetchInstruments (WebData (List Instrument))
-    | OnFetchAlgos (WebData (List Algo))
+    = OnFetchInstruments (WebData (List (Named {})))
+    | OnFetchAlgos (WebData (List (Named {})))
+    | OnFetchPredictions (WebData (List Prediction))

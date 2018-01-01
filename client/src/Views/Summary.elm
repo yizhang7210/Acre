@@ -3,10 +3,11 @@ module Views.Summary exposing (..)
 import Html exposing (..)
 import Html.Attributes exposing (..)
 import Msgs exposing (Msg)
-import Models exposing (Model, Instrument, Algo)
+import Models as M
+import Dict exposing (Dict)
 
 
-view : Model -> Html Msg
+view : M.Model -> Html Msg
 view model =
     div []
         [ table [ style [ ( "text-align", "center" ) ] ]
@@ -16,21 +17,32 @@ view model =
         ]
 
 
-generateRows : Model -> Html Msg
-generateRows model =
-    tr []
-        [ td [] [ text "Euler" ]
-        , td [] [ text "0.1" ]
-        , td [] [ text "0.2" ]
-        , td [] [ text "0.3" ]
-        , td [] [ text "0.4" ]
-        , td [] [ text "0.5" ]
-        ]
-
-
 generateHeader : List String -> Html Msg
 generateHeader instruments =
     instruments
         |> List.map (\ins -> th [] [ text ins ])
         |> (::) (th [] [])
         |> tr []
+
+
+generateRows : M.Model -> Html Msg
+generateRows model =
+    getPredictions model
+        |> (::) (td [] [ text "Euler" ])
+        |> tr []
+
+
+getPredictions : M.Model -> List (Html Msg)
+getPredictions model =
+    model.instruments
+        |> List.map (getPredictionFromInstrument model)
+        |> List.map (\x -> td [] [ text x ])
+
+
+getPredictionFromInstrument : M.Model -> String -> String
+getPredictionFromInstrument model ins =
+    model.predictions
+        |> Dict.get ins
+        |> Maybe.withDefault M.emptyPrediction
+        |> .predicted_change
+        |> toString

@@ -4,7 +4,7 @@ import Http
 import Json.Decode as Decode
 import Json.Decode.Pipeline exposing (decode, required)
 import Msgs exposing (Msg)
-import Models exposing (Instrument, Algo)
+import Models exposing (Named, Prediction)
 import RemoteData
 
 
@@ -15,37 +15,44 @@ baseUrl =
 
 fetchInstruments : Cmd Msg
 fetchInstruments =
-    Http.get (baseUrl ++ "instruments") instrumentsDecoder
+    Http.get (baseUrl ++ "instruments") (Decode.list nameDecoder)
         |> RemoteData.sendRequest
         |> Cmd.map Msgs.OnFetchInstruments
 
 
-instrumentsDecoder : Decode.Decoder (List Instrument)
-instrumentsDecoder =
-    Decode.list instrumentDecoder
-
-
-instrumentDecoder : Decode.Decoder Instrument
-instrumentDecoder =
-    decode Instrument
-        |> required "name" Decode.string
-        |> required "multiplier" Decode.int
-
-
 fetchAlgos : Cmd Msg
 fetchAlgos =
-    Http.get (baseUrl ++ "algos") algosDecoder
+    Http.get (baseUrl ++ "algos") (Decode.list nameDecoder)
         |> RemoteData.sendRequest
         |> Cmd.map Msgs.OnFetchAlgos
 
 
-algosDecoder : Decode.Decoder (List Algo)
-algosDecoder =
-    Decode.list algoDecoder
+fetchPredictions : String -> Int -> Cmd Msg
+fetchPredictions algo limit =
+    let
+        url =
+            baseUrl
+                ++ "algos/"
+                ++ algo
+                ++ "/predicted_changes?order_by=-date&limit="
+                ++ (toString limit)
+    in
+        Http.get url (Decode.list predictionDecoder)
+            |> RemoteData.sendRequest
+            |> Cmd.map Msgs.OnFetchPredictions
 
 
-algoDecoder : Decode.Decoder Algo
-algoDecoder =
-    decode Algo
-        |> required "name" Decode.string
-        |> required "description" Decode.string
+nameDecoder : Decode.Decoder (Named {})
+nameDecoder =
+    Decode.map (\name -> { name = name })
+        (Decode.at [ "name" ] Decode.string)
+
+
+predictionDecoder : Decode.Decoder Prediction
+predictionDecoder =
+    Decode.map5 Prediction
+        (Decode.at [ "date" ] Decode.string)
+        (Decode.at [ "instrument" ] Decode.string)
+        (Decode.at [ "predictor" ] Decode.string)
+        (Decode.at [ "predicted_change" ] Decode.float)
+        (Decode.at [ "score" ] Decode.float)

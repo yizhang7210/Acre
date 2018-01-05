@@ -17,6 +17,7 @@ def is_week_day(the_date):
     """
     return the_date.isoweekday() in [1, 2, 3, 4, 5]
 
+
 def get_next_weekday(the_date):
     """ Returns the date of next weekday following the given date.
 
@@ -38,8 +39,8 @@ def get_trading_day(given_time):
     """ Returns the trading day of the given time.
 
         Args:
-            now: Datetime object. If it does not have a timezone, default to
-                America/New York.
+            given_time: Datetime object. If it does not have a timezone, default
+                to America/New York.
 
         Returns:
             Date object. The date of trading day of the given time.
@@ -51,7 +52,7 @@ def get_trading_day(given_time):
     given_time = given_time.astimezone(new_york_time)
 
     if is_week_day(given_time.date()) and \
-        given_time.time() < datetime.time(17, 0, 0):
+            given_time.time() < datetime.time(17, 0, 0):
         return given_time.date()
 
     return get_next_weekday(given_time.date())

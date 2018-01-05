@@ -7,6 +7,7 @@ from rest_framework_swagger.views import get_swagger_view
 api_v1_patterns = [
     path('docs/', get_swagger_view(title='Acre API')),
     path('instruments', api.InstrumentsView.as_view()),
+    path('trading_day/current', api.get_current_trading_day),
     path('algos', api.get_all_algos),
     path('algos/update/end_of_day', api.end_of_day_update),
     path('algos/<str:algo>/profitable_changes',

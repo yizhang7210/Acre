@@ -7,8 +7,9 @@ from algos import Algos, calendar
 from algos.euler import views as euler_views
 from algos.euler.runner import Euler
 from datasource import views as datasource_views
-from datasource import Granularity, rates
+from datasource import rates
 from django.http import HttpResponse
+from django.utils import timezone
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_POST
 from rest_framework import status
@@ -114,6 +115,16 @@ def get_all_algos(request):
     """ List all supported algorithms.
     """
     return Response([{'name': 'Euler', 'description': 'One day auto-regression.'}])
+
+
+@api_view(['GET'])
+def get_current_trading_day(request):
+    # pylint: disable=unused-argument
+    """ Return the date string of current trading day.
+    """
+    now = timezone.now()
+    date = calendar.get_trading_day(now)
+    return Response({'date': date.isoformat()})
 
 
 @require_POST

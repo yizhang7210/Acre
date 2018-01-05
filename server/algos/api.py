@@ -53,8 +53,9 @@ class PredictedChangesView(APIView):
             - predictor: The machine learning model used for this prediction.
             - predictor_params: The model parameters used for this prediction.
         """
-        if algo == Algos.EULER.value:
-            return euler_views.get_predicted_changes(request.query_params)
+        algo_view = get_algo_view(algo)
+        if algo_view is not None:
+            return algo_view.get_predicted_changes(request.query_params)
 
         return Response(
             data={'message': "Specified algo is not supported."},
@@ -65,33 +66,46 @@ class ProfitableChangesView(APIView):
     """ Actual profitable changes for a given period of time.
     """
 
-    def get(self, request):
+    def get(self, request, algo):
         """ GET a list of actual profitable changes (maximum 200).
+            Valid algo names include: euler.
 
             Filter parameters include:
 
             - instrument: Name of the trading instrument, e.g. 'EUR_USD'.
-            - granularity: Granularity of the profitable change. Default is 'D'.
             - start: First date of the profitable changes, e.g. '2017-11-07'.
             - end: Last date of the profitable changes, e.g. '2017-12-09'
             - order_by: Key to sort the profitable changes (prefix a minus sign
                 for descending), e.g. '-date'. Default is date, ascending.
             - limit: Number of changes to limit the reponse by (max 200).
 
-            Each daily profitable change includes:
+            For algorithm Euler, each daily profitable change includes:
 
             - instrument: The traded instrument.
             - date: The trading day of the profitable change.
             - profitable_change: The amount of profitable price movement for the
                 given instrument on the given trading day.
         """
-        granularity = request.query_params.get('granularity')
-        if granularity is None or granularity == Granularity.DAILY.value:
-            return euler_views.get_actual_changes(request.query_params)
+        algo_view = get_algo_view(algo)
+        if algo_view is not None:
+            return algo_view.get_actual_changes(request.query_params)
 
         return Response(
-            data={'message': "Specified granularity is not supported."},
+            data={'message': "Specified algo is not supported."},
             status=status.HTTP_404_NOT_FOUND)
+
+
+def get_algo_view(algo):
+    """ Return the specific API view of the given algorithm.
+
+        Args:
+            algo: String. Name of the predictive algorithm.
+
+        Returns:
+            an APIView that can handle the corresponding request for the algo.
+    """
+    if algo == Algos.EULER.value:
+        return euler_views
 
 
 @api_view(['GET'])

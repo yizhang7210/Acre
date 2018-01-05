@@ -6,12 +6,12 @@ import decimal
 import itertools
 
 import numpy as np
+from algos.euler.models import training_samples as ts
 from sklearn.model_selection import cross_val_score
 from sklearn.tree import DecisionTreeRegressor
 
-from algos.euler.models import training_samples as ts
-
 TWO_PLACES = decimal.Decimal('0.01')
+
 
 class Learner:
     """ Class responsible for training models, finding the best fit and making
@@ -76,7 +76,7 @@ class Learner:
         all_samples = ts.get_samples(
             instrument=self.instrument,
             end=last_date,
-            order_by='date'
+            order_by=['date']
         )
         return all_samples
 

@@ -47,7 +47,7 @@ def get_predictions(**kwargs):
                 instrument: Instrument object.
                 start: Datetime. Filter predictions with later time than 'start'.
                 end: Datetime. Filter predictions with earlier time than 'end'.
-                order_by: String. Space delimited string of fields to order by.
+                order_by: List of strings to order the predictions by.
 
         Returns:
             List of Prediction objects satisfying the conditions (QuerySet).
@@ -60,7 +60,7 @@ def get_predictions(**kwargs):
     if kwargs.get('end') is not None:
         predictions = predictions.filter(date__lte=kwargs.get('end'))
     if kwargs.get('order_by') is not None:
-        predictions = predictions.order_by(kwargs.get('order_by'))
+        predictions = predictions.order_by(*kwargs.get('order_by'))
 
     return predictions
 

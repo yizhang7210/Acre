@@ -10,11 +10,16 @@ from rest_framework.response import Response
 def get_predicted_changes(query_params):
     """ Get a list of predicted profitable changes (maximum 200).
     """
+    order = query_params.get('order_by')
+    if order is not None:
+        order = order.split(',')
+    else:
+        order = ['date']
     all_predictions = predictions.get_predictions(
         instrument=query_params.get('instrument'),
         start=query_params.get('start'),
         end=query_params.get('end'),
-        order_by=query_params.get('order_by') or 'date')
+        order_by=order)
     limit = query_params.get('limit')
     if limit is None or int(limit) > 200:
         limit = 200
@@ -27,11 +32,17 @@ def get_predicted_changes(query_params):
 def get_actual_changes(query_params):
     """ Get a list of actual profitable changes (maximum 200).
     """
+    order = query_params.get('order_by')
+    if order is not None:
+        order = order.split(',')
+    else:
+        order = ['date']
+
     all_changes = ts.get_samples(
         instrument=query_params.get('instrument'),
         start=query_params.get('start'),
         end=query_params.get('end'),
-        order_by=query_params.get('order_by') or 'date')
+        order_by=order)
     limit = query_params.get('limit')
     if limit is None or int(limit) > 200:
         limit = 200

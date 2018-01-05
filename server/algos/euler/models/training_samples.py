@@ -1,9 +1,8 @@
 """ Data model and data access methods for TrainingSample for Euler algo.
 """
+from datasource.models.instruments import Instrument
 from django.contrib.postgres.fields import ArrayField
 from django.db import models
-
-from datasource.models.instruments import Instrument
 
 
 class TrainingSample(models.Model):
@@ -46,9 +45,9 @@ def get_samples(**kwargs):
         Args:
             kwargs: Named arguments for filtering training samples.
                 instrument: Instrument object. Filter by this instrument.
-                order_by: String. Space delimited string of fields to order by.
                 start: Date object. Filter by samples on or after this date.
                 end: Date object. Filter by samples on or before this date.
+                order_by: List of strings to order the samples by.
 
         Returns:
             List of Candle objects satisfying the conditions (QuerySet).
@@ -61,7 +60,7 @@ def get_samples(**kwargs):
     if kwargs.get('end') is not None:
         samples = samples.filter(date__lte=kwargs.get('end'))
     if kwargs.get('order_by') is not None:
-        samples = samples.order_by(kwargs.get('order_by'))
+        samples = samples.order_by(*kwargs.get('order_by'))
 
     return samples
 

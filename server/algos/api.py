@@ -137,6 +137,15 @@ def end_of_day_update(request):
     return HttpResponse('OK')
 
 
+@require_POST
+@csrf_exempt
+def clean_predictions(request):
+    # pylint: disable=unused-argument
+    """ Clean up predictions made for non trading days."""
+    euler_views.clean_predictions()
+    return HttpResponse('OK')
+
+
 def run_end_of_day():
     """ The actual process of End-of-Day update"""
     day_to_predict = calendar.get_trading_day(datetime.datetime.now())

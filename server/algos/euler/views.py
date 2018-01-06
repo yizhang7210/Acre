@@ -50,3 +50,19 @@ def get_actual_changes(query_params):
         limit = int(limit)
     serializer = PriceChangeSerializer(all_changes[:limit], many=True)
     return Response(serializer.data)
+
+
+def clean_predictions():
+    """ Clean up predictions made by Euler for a non trading day.
+    """
+    all_dates = []
+    for sample in ts.get_all(['date']):
+        all_dates.append(sample.date)
+
+    all_dates = list(set(all_dates))
+    all_dates.sort()
+
+    last_day = all_dates[-1]
+
+    predictions.Prediction.objects.filter(date__lte=last_day).exclude(
+        date__in=all_dates).delete()

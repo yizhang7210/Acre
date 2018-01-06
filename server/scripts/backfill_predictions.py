@@ -7,9 +7,13 @@ from algos.euler.runner import Euler
 
 
 # To implement RunScript interface.
-def run():
-    start = datetime.date(2017, 11, 1)
-    end = datetime.date(2017, 12, 24)
+def run(*args):
+    if len(args) < 2:
+        print("Usage: django-admin runscript backfill_predictions " +
+              "--script-args <start-date> <end-date> (e.g. 2018-01-01)")
+        return
+    start = datetime.datetime.strptime(args[0], '%Y-%m-%d').date()
+    end = datetime.datetime.strptime(args[1], '%Y-%m-%d').date()
     all_dates = []
     for sample in ts.get_samples(start=start, end=end, order_by=['date']):
         all_dates.append(sample.date)

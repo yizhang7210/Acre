@@ -10,6 +10,7 @@ api_v1_patterns = [
     path('trading_day/current', api.get_current_trading_day),
     path('algos', api.get_all_algos),
     path('algos/update/end_of_day', api.end_of_day_update),
+    path('algos/update/clean', api.clean_predictions),
     path('algos/<str:algo>/profitable_changes',
          api.ProfitableChangesView.as_view()),
     path('algos/<str:algo>/predicted_changes',

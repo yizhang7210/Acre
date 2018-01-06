@@ -10,20 +10,41 @@ import RemoteData
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
+        Msgs.OnFetchCurrentTradingDay response ->
+            ( { model | currentTradingDay = getField "date" response }
+            , Commands.fetchInstruments
+            )
+
         Msgs.OnFetchInstruments response ->
-            ( { model | instruments = getNames (response) }
+            ( { model | instruments = getNames response |> List.sort }
             , Commands.fetchAlgos
             )
 
         Msgs.OnFetchAlgos response ->
             ( { model | algos = getNames (response) }
-            , Commands.fetchPredictions "euler" (List.length model.instruments)
+            , Commands.fetchPredictions "euler" model.currentTradingDay
             )
 
         Msgs.OnFetchPredictions response ->
             ( { model | predictions = getContent (response) }
             , Cmd.none
             )
+
+
+getField : String -> RemoteData.WebData (Dict String String) -> String
+getField key response =
+    case response of
+        RemoteData.NotAsked ->
+            ""
+
+        RemoteData.Loading ->
+            ""
+
+        RemoteData.Success content ->
+            Dict.get key content |> Maybe.withDefault ""
+
+        RemoteData.Failure error ->
+            toString error
 
 
 getNames : RemoteData.WebData (List (Named a)) -> List String

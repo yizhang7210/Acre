@@ -5,12 +5,12 @@ import Msgs exposing (Msg)
 import Models exposing (Model, initialModel)
 import Update exposing (update)
 import View exposing (view)
-import Commands exposing (fetchInstruments)
+import Commands exposing (fetchCurrentDate)
 
 
 init : ( Model, Cmd Msg )
 init =
-    ( initialModel, fetchInstruments )
+    ( initialModel, fetchCurrentDate )
 
 
 subscriptions : Model -> Sub Msg

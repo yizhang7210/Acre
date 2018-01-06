@@ -4,7 +4,8 @@ import Dict exposing (Dict)
 
 
 type alias Model =
-    { instruments : List String
+    { currentTradingDay : String
+    , instruments : List String
     , algos : List String
     , predictions : Dict String Prediction
     }
@@ -43,7 +44,8 @@ emptyPrediction =
 
 initialModel : Model
 initialModel =
-    { instruments = []
+    { currentTradingDay = ""
+    , instruments = []
     , algos = []
     , predictions = Dict.empty
     }

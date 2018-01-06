@@ -9,8 +9,9 @@ import Dict exposing (Dict)
 
 view : M.Model -> Html Msg
 view model =
-    div []
-        [ table [ style [ ( "text-align", "center" ) ] ]
+    div [ style [ ( "text-align", "center" ) ] ]
+        [ h4 [] [ text ("Predictions for " ++ model.currentTradingDay) ]
+        , table [ style [ ( "margin-bottom", "200px" ) ] ]
             [ thead [] [ generateHeader model.instruments ]
             , tbody [] [ generateRows model ]
             ]
@@ -20,7 +21,7 @@ view model =
 generateHeader : List String -> Html Msg
 generateHeader instruments =
     instruments
-        |> List.map (\ins -> th [] [ text ins ])
+        |> List.map (\ins -> th [ style [ ( "font-weight", "normal" ) ] ] [ text ins ])
         |> (::) (th [] [])
         |> tr []
 

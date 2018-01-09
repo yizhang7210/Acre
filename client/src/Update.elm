@@ -5,6 +5,7 @@ import Msgs exposing (Msg(..))
 import Models exposing (Model, Named, Prediction)
 import Commands exposing (fetchAlgos)
 import RemoteData
+import Routing exposing (parseLocation)
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
@@ -27,6 +28,11 @@ update msg model =
 
         Msgs.OnFetchPredictions response ->
             ( { model | predictions = getContent (response) }
+            , Cmd.none
+            )
+
+        Msgs.OnLocationChange location ->
+            ( { model | route = parseLocation location }
             , Cmd.none
             )
 

@@ -5,6 +5,7 @@ import Html.Attributes exposing (..)
 import Msgs exposing (Msg)
 import Models as M
 import Dict exposing (Dict)
+import Routing exposing (algoHistoryPath)
 
 
 view : M.Model -> Html Msg
@@ -29,7 +30,7 @@ generateHeader instruments =
 generateRows : M.Model -> Html Msg
 generateRows model =
     getPredictions model
-        |> (::) (td [] [ text "Euler" ])
+        |> (::) (td [] [ a [ href (algoHistoryPath "Euler") ] [ text "Euler" ] ])
         |> tr []
 
 

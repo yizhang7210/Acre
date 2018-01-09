@@ -8,7 +8,14 @@ type alias Model =
     , instruments : List String
     , algos : List String
     , predictions : Dict String Prediction
+    , route : Route
     }
+
+
+type Route
+    = SummaryRoute
+    | AlgoHistoryRoute String
+    | NotFoundRoute
 
 
 type alias Named a =
@@ -42,10 +49,11 @@ emptyPrediction =
     }
 
 
-initialModel : Model
-initialModel =
+initialModel : Route -> Model
+initialModel route =
     { currentTradingDay = ""
     , instruments = []
     , algos = []
     , predictions = Dict.empty
+    , route = route
     }

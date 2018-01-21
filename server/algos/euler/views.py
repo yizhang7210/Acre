@@ -8,7 +8,7 @@ from rest_framework.response import Response
 
 
 def get_predicted_changes(query_params):
-    """ Get a list of predicted profitable changes (maximum 200).
+    """ Get a list of predicted profitable changes.
     """
     order = query_params.get('order_by')
     if order is not None:
@@ -20,17 +20,12 @@ def get_predicted_changes(query_params):
         start=query_params.get('start'),
         end=query_params.get('end'),
         order_by=order)
-    limit = query_params.get('limit')
-    if limit is None or int(limit) > 200:
-        limit = 200
-    else:
-        limit = int(limit)
-    serializer = PredictionSerializer(all_predictions[:limit], many=True)
+    serializer = PredictionSerializer(all_predictions, many=True)
     return Response(serializer.data)
 
 
 def get_actual_changes(query_params):
-    """ Get a list of actual profitable changes (maximum 200).
+    """ Get a list of actual profitable changes.
     """
     order = query_params.get('order_by')
     if order is not None:
@@ -43,12 +38,7 @@ def get_actual_changes(query_params):
         start=query_params.get('start'),
         end=query_params.get('end'),
         order_by=order)
-    limit = query_params.get('limit')
-    if limit is None or int(limit) > 200:
-        limit = 200
-    else:
-        limit = int(limit)
-    serializer = PriceChangeSerializer(all_changes[:limit], many=True)
+    serializer = PriceChangeSerializer(all_changes, many=True)
     return Response(serializer.data)
 
 

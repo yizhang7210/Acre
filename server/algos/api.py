@@ -33,7 +33,7 @@ class PredictedChangesView(APIView):
     """
 
     def get(self, request, algo):
-        """ GET a list of predicted profitable changes (maximum 200).
+        """ GET a list of predicted profitable changes.
             Valid algo names include: euler.
 
             Filter parameters include:
@@ -43,7 +43,6 @@ class PredictedChangesView(APIView):
             - end: Last date of the predictions, e.g. '2017-12-09'
             - order_by: Key to sort the predictions (prefix a minus sign for
                 descending), e.g. '-date'. Default is date, ascending.
-            - limit: Number of predictions to limit the reponse by (max 200).
 
             For algorithm Euler, each prediction includes:
 
@@ -68,7 +67,7 @@ class ProfitableChangesView(APIView):
     """
 
     def get(self, request, algo):
-        """ GET a list of actual profitable changes (maximum 200).
+        """ GET a list of actual profitable changes.
             Valid algo names include: euler.
 
             Filter parameters include:
@@ -78,7 +77,6 @@ class ProfitableChangesView(APIView):
             - end: Last date of the profitable changes, e.g. '2017-12-09'
             - order_by: Key to sort the profitable changes (prefix a minus sign
                 for descending), e.g. '-date'. Default is date, ascending.
-            - limit: Number of changes to limit the reponse by (max 200).
 
             For algorithm Euler, each daily profitable change includes:
 

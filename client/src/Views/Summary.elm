@@ -12,7 +12,7 @@ view : M.Model -> Html Msg
 view model =
     div [ style [ ( "text-align", "center" ) ] ]
         [ h4 [] [ text ("Predictions for " ++ model.currentTradingDay) ]
-        , table [ style [ ( "margin-bottom", "200px" ) ] ]
+        , table [ style [ ( "margin-bottom", "200px" ), ( "display", "inline-table" ) ] ]
             [ thead [] [ generateHeader model.instruments ]
             , tbody [] [ generateRows model ]
             ]
@@ -43,8 +43,8 @@ getPredictions model =
 
 getPredictionFromInstrument : M.Model -> String -> String
 getPredictionFromInstrument model ins =
-    model.predictions
+    model.predictionSummary
         |> Dict.get ins
         |> Maybe.withDefault M.emptyPrediction
-        |> .predicted_change
+        |> .value
         |> toString

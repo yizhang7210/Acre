@@ -5,11 +5,21 @@ import Dict exposing (Dict)
 
 type alias Model =
     { currentTradingDay : String
-    , instruments : List String
-    , algos : List String
-    , predictions : Dict String Prediction
+    , instruments : List InstrumentName
+    , algos : List AlgoName
+    , predictionSummary : Dict InstrumentName DailyChange
+    , pastPredictedChanges : Dict InstrumentName (List DailyChange)
+    , pastProfitableChanges : Dict InstrumentName (List DailyChange)
     , route : Route
     }
+
+
+type alias AlgoName =
+    String
+
+
+type alias InstrumentName =
+    String
 
 
 type Route
@@ -30,22 +40,22 @@ type alias Instrument =
     { name : String, multipler : Int }
 
 
-type alias Prediction =
+type alias HasInstrument a =
+    { a | instrument : String }
+
+
+type alias DailyChange =
     { date : String
     , instrument : String
-    , predictor : String
-    , predicted_change : Float
-    , score : Float
+    , value : Float
     }
 
 
-emptyPrediction : Prediction
+emptyPrediction : DailyChange
 emptyPrediction =
     { date = "1970-01-01"
     , instrument = "XXX_XXX"
-    , predictor = ""
-    , predicted_change = 1 / 0
-    , score = 1 / 0
+    , value = 1 / 0
     }
 
 
@@ -54,6 +64,8 @@ initialModel route =
     { currentTradingDay = ""
     , instruments = []
     , algos = []
-    , predictions = Dict.empty
+    , predictionSummary = Dict.empty
     , route = route
+    , pastPredictedChanges = Dict.empty
+    , pastProfitableChanges = Dict.empty
     }

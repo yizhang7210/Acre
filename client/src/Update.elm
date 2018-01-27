@@ -34,13 +34,13 @@ update msg model =
             , Cmd.none
             )
 
-        Msgs.OnFetchHistoricalPredictedChanges algo response ->
-            ( { model | pastPredictedChanges = groupValuesByInstrument response }
-            , Commands.fetchPastProfitableChanges algo model.currentTradingDay
-            )
-
         Msgs.OnFetchHistoricalProfitableChanges algo response ->
             ( { model | pastProfitableChanges = groupValuesByInstrument response }
+            , Commands.fetchPastPredictedChanges algo model.currentTradingDay
+            )
+
+        Msgs.OnFetchHistoricalPredictedChanges algo response ->
+            ( { model | pastPredictedChanges = groupValuesByInstrument response }
             , Cmd.none
             )
 
@@ -48,7 +48,7 @@ update msg model =
             case parseLocation location of
                 Models.AlgoHistoryRoute algo ->
                     ( { model | route = Models.AlgoHistoryRoute algo }
-                    , Commands.fetchPastPredictedChanges algo model.currentTradingDay
+                    , Commands.fetchPastProfitableChanges algo model.currentTradingDay
                     )
 
                 Models.SummaryRoute ->

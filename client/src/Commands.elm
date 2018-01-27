@@ -64,7 +64,7 @@ fetchPastPredictedChanges algo currentDate =
         startDate =
             addYear -1 currentDate
     in
-        fetchPredictions algo startDate currentDate "instrument,-date"
+        fetchPredictions algo startDate currentDate "instrument,date"
             |> Cmd.map (Msgs.OnFetchHistoricalPredictedChanges algo)
 
 

@@ -6,7 +6,6 @@ import Time exposing (Time)
 import Svg exposing (..)
 import Svg.Attributes exposing (..)
 import Visualization.Axis as Axis exposing (defaultOptions)
-import Visualization.List as List
 import Visualization.Scale as Scale exposing (ContinuousScale, ContinuousTimeScale)
 import Visualization.Shape as Shape
 import Html as H
@@ -75,7 +74,7 @@ line points =
             getBounds points
     in
         List.map (transformToLineData bounds) points
-            |> Shape.line Shape.monotoneInXCurve
+            |> Shape.line Shape.linearCurve
             |> d
 
 
@@ -96,11 +95,28 @@ drawInstrument model instrument =
             , g [ transform ("translate(" ++ toString (padding - 1) ++ ", " ++ toString padding ++ ")") ]
                 [ yAxis ]
             , g [ transform ("translate(" ++ toString padding ++ ", " ++ toString padding ++ ")") ]
-                [ Svg.path [ line (getData model.pastPredictedChanges instrument), stroke "red", strokeWidth "1px", fill "none" ] []
-                , Svg.path [ line (getData model.pastProfitableChanges instrument), stroke "blue", strokeWidth "1px", fill "none" ] []
+                [ Svg.path
+                    [ line (getData model.pastPredictedChanges instrument |> dropLast)
+                    , stroke "red"
+                    , strokeWidth "1px"
+                    , fill "none"
+                    ]
+                    []
+                , Svg.path
+                    [ line (getData model.pastProfitableChanges instrument)
+                    , stroke "blue"
+                    , strokeWidth "1px"
+                    , fill "none"
+                    ]
+                    []
                 ]
             ]
         ]
+
+
+dropLast : List a -> List a
+dropLast l =
+    List.take (List.length l - 1) l
 
 
 getData : Dict M.InstrumentName (List M.DailyChange) -> M.InstrumentName -> List ( Date, Float )

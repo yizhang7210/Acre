@@ -8,6 +8,7 @@ import itertools
 import numpy as np
 from algos.euler.models import training_samples as ts
 from sklearn.model_selection import cross_val_score
+from sklearn.svm import LinearSVR
 from sklearn.tree import DecisionTreeRegressor
 
 TWO_PLACES = decimal.Decimal('0.01')
@@ -35,9 +36,11 @@ class Learner:
             Args:
                 None.
         """
+        self.best_params = {}
         if self.predictor.name == 'treeRegressor':
             self.model = DecisionTreeRegressor()
-            self.best_params = {}
+        if self.predictor.name == 'linearSVMRegressor':
+            self.model = LinearSVR()
 
     def generate_all_param_combos(self):
         """ Turn a range of each paramters into a list of all combinations.

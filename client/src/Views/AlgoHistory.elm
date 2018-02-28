@@ -12,6 +12,7 @@ import Html as H
 import Html.Attributes as HA
 import Msgs exposing (Msg)
 import Models as M
+import List.Extra as LE
 
 
 w : Float
@@ -74,7 +75,7 @@ line points =
             getBounds points
     in
         List.map (transformToLineData bounds) points
-            |> Shape.line Shape.linearCurve
+            |> Shape.line Shape.naturalCurve
             |> d
 
 
@@ -86,45 +87,68 @@ view model algo =
 
 drawInstrument : M.Model -> M.InstrumentName -> H.Html Msg
 drawInstrument model instrument =
-    H.div [ HA.style [ ( "display", "inline-table" ) ] ]
-        [ H.h4 [ HA.style [ ( "margin", "10px auto" ) ] ] [ text instrument ]
-        , svg
-            [ width (toString w ++ "px"), height (toString h ++ "px") ]
-            [ g [ transform ("translate(" ++ toString (padding - 1) ++ ", " ++ toString (h - padding) ++ ")") ]
-                [ xAxis (getData model.pastProfitableChanges instrument) ]
-            , g [ transform ("translate(" ++ toString (padding - 1) ++ ", " ++ toString padding ++ ")") ]
-                [ yAxis ]
-            , g [ transform ("translate(" ++ toString padding ++ ", " ++ toString padding ++ ")") ]
-                [ Svg.path
-                    [ line (getData model.pastPredictedChanges instrument |> dropLast)
-                    , stroke "red"
-                    , strokeWidth "1px"
-                    , fill "none"
+    let
+        diffData =
+            getPredictionDiff model instrument
+    in
+        H.div [ HA.style [ ( "display", "inline-table" ) ] ]
+            [ H.h4 [ HA.style [ ( "margin", "10px auto" ) ] ] [ text instrument ]
+            , svg
+                [ width (toString w ++ "px"), height (toString h ++ "px") ]
+                [ g [ transform ("translate(" ++ toString (padding - 1) ++ ", " ++ toString (h - padding) ++ ")") ]
+                    [ xAxis diffData ]
+                , g [ transform ("translate(" ++ toString (padding - 1) ++ ", " ++ toString padding ++ ")") ]
+                    [ yAxis ]
+                , g [ transform ("translate(" ++ toString padding ++ ", " ++ toString padding ++ ")") ]
+                    [ Svg.path
+                        [ line (List.map (\p -> ( Tuple.first p, 0 )) diffData)
+                        , stroke "grey"
+                        , strokeWidth "2px"
+                        , strokeDasharray "5, 5"
+                        , fill "none"
+                        ]
+                        []
                     ]
-                    []
-                , Svg.path
-                    [ line (getData model.pastProfitableChanges instrument)
-                    , stroke "blue"
-                    , strokeWidth "1px"
-                    , fill "none"
+                , g [ transform ("translate(" ++ toString padding ++ ", " ++ toString padding ++ ")") ]
+                    [ Svg.path
+                        [ line diffData
+                        , stroke "blue"
+                        , strokeWidth "1px"
+                        , fill "none"
+                        ]
+                        []
                     ]
-                    []
                 ]
             ]
-        ]
 
 
-dropLast : List a -> List a
-dropLast l =
-    List.take (List.length l - 1) l
+getPredictionDiff : M.Model -> M.InstrumentName -> List ( Date, Float )
+getPredictionDiff model instrument =
+    let
+        predictedList =
+            Dict.get instrument model.pastPredictedChanges |> Maybe.withDefault []
+
+        actualList =
+            Dict.get instrument model.pastProfitableChanges |> Maybe.withDefault []
+
+        calcDiff p a =
+            (sign (p * a)) * (abs (p - a))
+
+        getDiff pList aList =
+            LE.zip pList aList
+                |> List.map (\( p, a ) -> ( toDate p.date, calcDiff p.value a.value ))
+    in
+        getDiff predictedList actualList
 
 
-getData : Dict M.InstrumentName (List M.DailyChange) -> M.InstrumentName -> List ( Date, Float )
-getData dataDict instrument =
-    dataDict
-        |> Dict.get instrument
-        |> Maybe.withDefault []
-        |> List.map (\p -> ( toDate p.date, p.value ))
+sign : Float -> Float
+sign n =
+    if n > 0 then
+        1
+    else if n < 0 then
+        -1
+    else
+        0
 
 
 toDate : String -> Date

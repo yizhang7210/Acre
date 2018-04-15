@@ -35,7 +35,6 @@ class Learner:
             Args:
                 None.
         """
-        self.best_params = {}
         if self.predictor.name == 'treeRegressor':
             self.model = DecisionTreeRegressor()
         if self.predictor.name == 'linearSVMRegressor':

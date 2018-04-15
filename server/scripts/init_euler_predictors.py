@@ -14,10 +14,10 @@ SVM_PARAMS = {
 def initialize_euler_predictors():
     predictors.insert_many([
         predictors.create_one(
-            name='treeRegressor', parameters=TREE_PARAMS
+            name='treeRegressor', parameters=TREE_PARAMS, is_active=False
         ),
         predictors.create_one(
-            name='linearSVMRegressor', parameters=SVM_PARAMS
+            name='linearSVMRegressor', parameters=SVM_PARAMS, is_active=True
         ),
     ])
 

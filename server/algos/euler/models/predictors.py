@@ -9,6 +9,7 @@ class Predictor(models.Model):
     """
     name = models.CharField(max_length=40, unique=True, primary_key=True)
     parameters = JSONField(default={})
+    is_active = models.BooleanField(default=False)
 
 
 def create_one(**kwargs):
@@ -17,8 +18,8 @@ def create_one(**kwargs):
         Args:
             Named arguments.
                 name: Name of the predictor.
-                param_range: Dictionary of parameters and their respective
-                    range of values. e.g.: {'param_one': [1,2,3]}
+                parameters: Dictionary of parameters e.g. {'param_one': 3}
+                is_active: Boolean. Whether this predictor is actively used.
 
         Returns:
             Predictor object with the given fields.
@@ -36,6 +37,18 @@ def get_all():
             List of Predictor objects (QuerySet).
     """
     return Predictor.objects.all()
+
+
+def get_active():
+    """ Returns the one active predictors in the database.
+
+        Args:
+            None.
+
+        Returns:
+            A single active Predictor.
+    """
+    return Predictor.objects.get(is_active=True)
 
 
 def delete_all():

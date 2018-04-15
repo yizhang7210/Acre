@@ -26,7 +26,8 @@ as well as the configurations in `acre/settings/local.py`
 - Set up your environment variables according to `docs/dev/Envs.md#local`
 - Catch up on your database schema: `./manage.py migrate`
 - You should be good to go: make sure `./manage.py test` all pass
-
+- Even better, do `coverage run manage.py test` to run test with coverage
+- You can access your coverage report at `coverage report`
 
 Code Commit Checklist
 ---------------------

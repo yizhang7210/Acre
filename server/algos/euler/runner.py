@@ -70,16 +70,16 @@ class Euler(threading.Thread):
                 None.
         """
         yesterday = self.prediction_date - datetime.timedelta(1)
-        for predictor in predictors.get_all():
-            learner = Learner(instrument, predictor)
-            ave_score = learner.learn(before=yesterday, cv_fold=self.cv_fold)
-            profitable_change = learner.predict(features)
+        predictor = predictors.get_active()
+        learner = Learner(instrument, predictor)
+        ave_score = learner.learn(before=yesterday, cv_fold=self.cv_fold)
+        profitable_change = learner.predict(features)
 
-            new_prediction = predictions.create_one(
-                date=self.prediction_date,
-                instrument=instrument,
-                predictor=predictor,
-                score=ave_score,
-                profitable_change=profitable_change)
+        new_prediction = predictions.create_one(
+            date=self.prediction_date,
+            instrument=instrument,
+            predictor=predictor,
+            score=ave_score,
+            profitable_change=profitable_change)
 
-            predictions.upsert(new_prediction)
+        predictions.upsert(new_prediction)

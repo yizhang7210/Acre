@@ -27,7 +27,7 @@ class EulerAlgoTest(TestCase):
     def set_up_predictors(cls):
         params = {'max_depth': 3, 'min_samples_split': 2}
         predictor = predictors.create_one(
-            name='treeRegressor', parameters=params)
+            name='treeRegressor', parameters=params, is_active=True)
         predictor.save()
 
     @classmethod

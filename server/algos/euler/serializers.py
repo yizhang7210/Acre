@@ -13,7 +13,7 @@ class PredictorSerializer(serializers.ModelSerializer):
     """
     class Meta:
         model = Predictor
-        fields = '__all__'
+        fields = ('name', 'parameters')
 
 
 class PredictionSerializer(serializers.ModelSerializer):

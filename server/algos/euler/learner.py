@@ -42,28 +42,6 @@ class Learner:
         if self.predictor.name == 'linearSVMRegressor':
             self.model = LinearSVR()
 
-    def generate_all_param_combos(self):
-        """ Turn a range of each paramters into a list of all combinations.
-
-            Args:
-                None.
-
-            Returns:
-                List of Dictionaries. Each entry is a combination of parameters
-                    from the paramter range. e.g.
-                    [{'max_depth': 4, 'min_samples_split': 5}, ...]
-        """
-        param_names = []
-        param_values = []
-        for param_name in self.predictor.parameter_range:
-            param_names.append(param_name)
-            param_values.append(self.predictor.parameter_range.get(param_name))
-
-        all_param_combos = itertools.product(*param_values)
-        all_params = [dict(zip(param_names, x)) for x in all_param_combos]
-
-        return all_params
-
     def get_training_samples(self, end_date):
         """ Retrieve all training samples before the end date.
 
@@ -101,20 +79,14 @@ class Learner:
         all_training_samples = self.get_training_samples(end_date)
         features = [x.features for x in all_training_samples]
         targets = [x.target for x in all_training_samples]
-        best_score = float('-inf')
-        best_params = {}
-        for params in self.generate_all_param_combos():
-            self.model.set_params(**params)
-            scores = cross_val_score(self.model, features, targets, cv=cv_fold)
-            ave_score = sum(scores) / len(scores)
-            if ave_score > best_score:
-                best_score = ave_score
-                best_params = params
 
-        self.model.set_params(**best_params)
+        self.model.set_params(**self.predictor.parameters)
+        scores = cross_val_score(self.model, features, targets, cv=cv_fold)
+        ave_score = sum(scores) / len(scores)
+
         self.model.fit(features, targets)
 
-        return best_score
+        return ave_score
 
     def predict(self, features):
         """ Use trained model to predict profitable change given the features.

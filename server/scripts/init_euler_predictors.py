@@ -2,22 +2,22 @@
 from algos.euler.models import predictors
 
 TREE_PARAMS = {
-    'max_depth': [4, 5, 6],
-    'min_samples_split': [1000, 2000, 3000, 4000, 5000]
+    'max_depth': 5,
+    'min_samples_split': 2000
 }
 
 SVM_PARAMS = {
-    'max_iter': [500]
+    'max_iter': 500
 }
 
 
 def initialize_euler_predictors():
     predictors.insert_many([
         predictors.create_one(
-            name='treeRegressor', parameter_range=TREE_PARAMS
+            name='treeRegressor', parameters=TREE_PARAMS
         ),
         predictors.create_one(
-            name='linearSVMRegressor', parameter_range=SVM_PARAMS
+            name='linearSVMRegressor', parameters=SVM_PARAMS
         ),
     ])
 

@@ -8,7 +8,7 @@ class Predictor(models.Model):
     """ Predictor data model.
     """
     name = models.CharField(max_length=40, unique=True, primary_key=True)
-    parameter_range = JSONField()
+    parameters = JSONField(default={})
 
 
 def create_one(**kwargs):
@@ -25,6 +25,7 @@ def create_one(**kwargs):
     """
     return Predictor(**kwargs)
 
+
 def get_all():
     """ Returns all predictors in the database.
 
@@ -36,6 +37,7 @@ def get_all():
     """
     return Predictor.objects.all()
 
+
 def delete_all():
     """ Delete all predictors in the database.
 
@@ -43,6 +45,7 @@ def delete_all():
             None.
     """
     return Predictor.objects.all().delete()
+
 
 def insert_many(predictors):
     """ Bulk insert a list of predictors.

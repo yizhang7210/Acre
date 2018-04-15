@@ -46,7 +46,7 @@ class EulerAPITest(APITestCase):
     @classmethod
     def set_up_predictors(cls):
         cls.predictor = predictors.create_one(
-            name="test-predictor", parameter_range={})
+            name="test-predictor", parameters={})
         cls.predictor.save()
 
     @classmethod
@@ -54,15 +54,15 @@ class EulerAPITest(APITestCase):
         day_one = datetime.date(2017, 12, 12)
         pred_one = predictions.create_one(
             instrument=cls.eur_usd, date=day_one, profitable_change=100,
-            score=0.4, predictor=cls.predictor, predictor_params={})
+            score=0.4, predictor=cls.predictor)
 
         day_two = datetime.date(2017, 12, 17)
         pred_two = predictions.create_one(
             instrument=cls.usd_jpy, date=day_two, profitable_change=150,
-            score=0.3, predictor=cls.predictor, predictor_params={})
+            score=0.3, predictor=cls.predictor)
         pred_three = predictions.create_one(
             instrument=cls.eur_usd, date=day_two, profitable_change=-180,
-            score=0.2, predictor=cls.predictor, predictor_params={})
+            score=0.2, predictor=cls.predictor)
 
         predictions.insert_many([pred_one, pred_two, pred_three])
 

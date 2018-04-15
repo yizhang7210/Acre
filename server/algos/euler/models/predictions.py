@@ -15,7 +15,6 @@ class Prediction(models.Model):
     instrument = models.ForeignKey(Instrument, on_delete=models.PROTECT)
     score = models.FloatField()
     predictor = models.ForeignKey(Predictor, on_delete=models.PROTECT)
-    predictor_params = JSONField()
 
     class Meta:
         unique_together = (('predictor', 'instrument', 'date'), )
@@ -31,7 +30,6 @@ def create_one(**kwargs):
                 instrument: Instrument object.
                 score: Float. The cross validation score of this prediction.
                 predictor: Predictor object.
-                predictor_params: Dict. Parameters used for this prediction.
 
         Returns:
             Predicton object with the given fields.
@@ -112,7 +110,6 @@ def upsert(prediction):
     if existing:
         existing = existing[0]
         existing.profitable_change = prediction.profitable_change
-        existing.predictor_params = prediction.predictor_params
         existing.save()
     else:
         prediction.save()

@@ -51,7 +51,6 @@ class PredictedChangesView(APIView):
             - predicted_change: How much the rate is predicted to change (in pips).
             - score: A cross validtion score of the prediction. Higher the better.
             - predictor: The machine learning model used for this prediction.
-            - predictor_params: The model parameters used for this prediction.
         """
         algo_view = get_algo_view(algo)
         if algo_view is not None:

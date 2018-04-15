@@ -3,9 +3,10 @@
 """
 import datetime
 
-from algos import Algos, calendar
+from algos import Algos
 from algos.euler import views as euler_views
 from algos.euler.runner import Euler
+from core import calendar
 from datasource import views as datasource_views
 from datasource import rates
 from django.http import HttpResponse

@@ -4,10 +4,10 @@ from decimal import Decimal
 from unittest.mock import patch
 
 import pytz
-from django.test import TestCase
-
+from core.models import instruments
 from datasource import rates
-from datasource.models import candles, instruments
+from datasource.models import candles
+from django.test import TestCase
 
 SIX_PLACES = Decimal('0.000001')
 
@@ -17,9 +17,9 @@ class RatesImportTest(TestCase):
     @classmethod
     def setUpClass(cls):
         super(RatesImportTest, cls).setUpClass()
-        eur_usd = instruments.Instrument(name='EUR_USD', multiplier=10000)
+        eur_usd = instruments.create_one(name='EUR_USD', multiplier=10000)
         eur_usd.save()
-        usd_jpy = instruments.Instrument(name='USD_JPY', multiplier=100)
+        usd_jpy = instruments.create_one(name='USD_JPY', multiplier=100)
         usd_jpy.save()
 
     @classmethod

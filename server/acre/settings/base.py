@@ -55,6 +55,7 @@ THIRD_PARTY_APPS = (
 )
 
 LOCAL_APPS = (
+    'core',
     'algos.euler',
     'datasource',
 )

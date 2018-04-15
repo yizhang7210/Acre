@@ -11,9 +11,9 @@ from decimal import Decimal
 from enum import Enum
 
 import pytz
-
+from core.models import instruments
 from datasource import Granularity
-from datasource.models import candles, instruments
+from datasource.models import candles
 
 SIX_PLACES = Decimal('0.000001')
 
@@ -23,6 +23,7 @@ TRADE_URL = "api-fxtrade.oanda.com"
 
 GAME_TOKEN = os.environ.get('TOKEN_GAME')
 TRADE_TOKEN = os.environ.get('TOKEN_TRADE')
+
 
 class Env(Enum):
     """ OANDA Env. Can be either GAME or TRADE

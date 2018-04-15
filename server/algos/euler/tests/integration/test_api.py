@@ -4,7 +4,7 @@ import json
 
 from algos.euler.models import training_samples as ts
 from algos.euler.models import predictions, predictors
-from datasource.models import instruments
+from core.models import instruments
 from rest_framework.test import APITestCase
 
 

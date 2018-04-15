@@ -1,6 +1,6 @@
 """ Data model and data access methods for TrainingSample for Euler algo.
 """
-from datasource.models.instruments import Instrument
+from core.models.instruments import Instrument
 from django.contrib.postgres.fields import ArrayField
 from django.db import models
 

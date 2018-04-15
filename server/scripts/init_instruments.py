@@ -1,5 +1,5 @@
 # pylint: disable=missing-docstring
-from datasource.models import instruments
+from core.models import instruments
 
 
 def initialize_instruments():
@@ -10,6 +10,7 @@ def initialize_instruments():
         instruments.create_one(name='USD_CHF', multiplier=10000),
         instruments.create_one(name='USD_JPY', multiplier=100),
     ])
+
 
 # To implement RunScript interface.
 def run():

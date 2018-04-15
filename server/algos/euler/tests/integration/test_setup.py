@@ -1,7 +1,8 @@
 # pylint: disable=missing-docstring
 import datetime
 
-from datasource.models import candles, instruments
+from core.models import instruments
+from datasource.models import candles
 
 
 class TestSetup():

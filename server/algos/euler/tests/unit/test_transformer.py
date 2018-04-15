@@ -6,7 +6,8 @@ from unittest.mock import patch
 
 from algos.euler import transformer as tsfr
 from algos.euler.models import training_samples as ts
-from datasource.models import candles, instruments
+from core.models import instruments
+from datasource.models import candles
 
 TWO_PLACES = Decimal('0.01')
 

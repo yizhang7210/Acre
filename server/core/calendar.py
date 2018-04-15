@@ -1,4 +1,4 @@
-""" This is algos.calendar module.
+""" This is core.calendar module.
     This module is responsible for calendar related utilities.
 """
 import datetime

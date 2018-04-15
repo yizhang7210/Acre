@@ -8,8 +8,9 @@ import threading
 from algos.euler import transformer
 from algos.euler.learner import Learner
 from algos.euler.models import predictions, predictors
+from core.models import instruments
 from datasource import Granularity
-from datasource.models import candles, instruments
+from datasource.models import candles
 
 
 class Euler(threading.Thread):

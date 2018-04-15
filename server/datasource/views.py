@@ -1,7 +1,7 @@
 """ This is datasource.views module.
     This module provides the view of the REST API from the data source.
 """
-from datasource.models import instruments
+from core.models import instruments
 from datasource.serializers import InstrumentSerializer
 from rest_framework.response import Response
 

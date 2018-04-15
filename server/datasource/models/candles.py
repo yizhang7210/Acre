@@ -1,9 +1,8 @@
 """ Data model and data access methods for Candles.
 """
 import pytz
+from core.models.instruments import Instrument
 from django.db import models
-
-from .instruments import Instrument
 
 
 class Candle(models.Model):

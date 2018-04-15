@@ -6,8 +6,9 @@
 
 import datetime
 
+from core.models import instruments
 from datasource import Granularity, oanda
-from datasource.models import candles, instruments
+from datasource.models import candles
 
 
 def get_start_date_str(instrument):

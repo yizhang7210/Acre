@@ -2,7 +2,7 @@
 import datetime
 from unittest import TestCase
 
-from algos import calendar
+from core import calendar
 
 
 class CalendarTest(TestCase):

@@ -6,7 +6,8 @@ import datetime
 import decimal
 
 from algos.euler.models import training_samples as ts
-from datasource.models import candles, instruments
+from core.models import instruments
+from datasource.models import candles
 
 TWO_PLACES = decimal.Decimal('0.01')
 

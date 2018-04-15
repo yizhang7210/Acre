@@ -6,7 +6,8 @@ from decimal import Decimal
 from algos.euler.models import training_samples as ts
 from algos.euler.models import predictions, predictors
 from algos.euler.runner import Euler
-from datasource.models import candles, instruments
+from core.models import instruments
+from datasource.models import candles
 from django.test import TestCase
 
 from .test_setup import TestSetup

@@ -1,7 +1,6 @@
 """ Data model and data access methods for Prediction for Euler algo.
 """
 from core.models.instruments import Instrument
-from django.contrib.postgres.fields import JSONField
 from django.db import models
 
 from .predictors import Predictor

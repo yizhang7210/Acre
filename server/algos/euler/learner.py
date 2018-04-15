@@ -3,7 +3,6 @@
 """
 import datetime
 import decimal
-import itertools
 
 import numpy as np
 from algos.euler.models import training_samples as ts

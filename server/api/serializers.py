@@ -1,5 +1,5 @@
-""" This is datasource.serializers module.
-    This module provides the serializers of instruments.
+""" This is api.serializers module.
+    This module provides the serializers of the REST API.
 """
 from core.models.instruments import Instrument
 from rest_framework import serializers

@@ -1,13 +1,14 @@
-""" This is algos.api module.
-    This module is responsible for the REST API of the algorithms.
+""" This is api.views module.
+    This module is responsible for the REST API.
 """
 import datetime
 
 from algos import Algos
 from algos.euler import views as euler_views
 from algos.euler.runner import Euler
+from api.serializers import InstrumentSerializer
 from core import calendar
-from datasource import views as datasource_views
+from core.models import instruments
 from datasource import rates
 from django.http import HttpResponse
 from django.utils import timezone
@@ -26,7 +27,8 @@ class InstrumentsView(APIView):
     def get(self, request):
         """ GET a list of all supported trading instruments.
         """
-        return datasource_views.get_all_instruments()
+        serializer = InstrumentSerializer(instruments.get_all(), many=True)
+        return Response(serializer.data)
 
 
 class PredictedChangesView(APIView):

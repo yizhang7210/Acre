@@ -10,7 +10,6 @@ jobs:
           POSTGRES_USER: circleci
           POSTGRES_DB: circle_test
           POSTGRES_PASSWORD: ""
-
     steps:
       - checkout
       - run:
@@ -27,17 +26,36 @@ jobs:
             . venv/bin/activate
             python manage.py test
       - deploy:
-          name: Deploy worker and server to AWS
+          name: Deploy server to AWS
           command: |
             cd server
             . venv/bin/activate
             sh deploy/deploy.sh
 
+  build_lambda:
+    working_directory: ~/repo
+    docker:
+      - image: circleci/python:3.6.1
+    steps:
+      - checkout
+      - run:
+          name: Install Dependencies
+          command: |
+            cd lambda
+            python3 -m venv venv
+            . venv/bin/activate
+            pip install -r requirements.txt
+      - deploy:
+          name: Deploy Lambda to AWS
+          command: |
+            cd lambda
+            . venv/bin/activate
+            sh deploy.sh
+
   build_client:
     working_directory: ~/repo
     docker:
       - image: circleci/node:7.10
-
     steps:
       - checkout
       - run:
@@ -57,6 +75,9 @@ workflows:
   full_deploy:
     jobs:
       - build_server
+      - build_lambda:
+          requires:
+            - build_server
       - build_client:
           requires:
             - build_server

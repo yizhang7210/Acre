@@ -1,8 +1,0 @@
-version: 1
-cron:
- - name: "overall-eod-of-day"
-   url: "/v1/algos/update/end_of_day"
-   schedule: "01 22 * * *"
- - name: "clean-non-trading-day-predictions"
-   url: "/v1/algos/update/clean"
-   schedule: "01 00 * * *"

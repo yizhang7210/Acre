@@ -1,6 +1,7 @@
 # Environment Variables
-We use environment variables for credentials, setting, etc. Here is the list of
-what needs to be where.
+We use environment variables for credentials and settings. Here is the list of
+what needs to be where. To make sure an environment variable exists, add the
+following line to your `~/bash.rc` or equivalent: `export ENV_VAR=<ENV_VAR_VALUE>`.
 
 ### Local
 Locally everything runs under the `local` settings. You need the following
@@ -18,8 +19,8 @@ AWS_SECRET_ACCESS_KEY=<your-aws-secret-access-key>
 TOKEN_GAME=<your-oanda-game-environment-token>
 ```
 
-### Server
-For the server of the prediction API, the following are required:
+### Acre Server
+On Acre's application server, the following are required:
 ```
 ACRE_ENV=DEV or PROD
 DJANGO_SETTINGS_MODULE=acre.settings

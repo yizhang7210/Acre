@@ -5,6 +5,7 @@
   "main": "index.js",
   "dependencies": {
     "css-loader": "^0.28.7",
+    "elm": "^0.18.0",
     "elm-webpack-loader": "^4.4.0",
     "file-loader": "^1.1.6",
     "style-loader": "^0.19.1",

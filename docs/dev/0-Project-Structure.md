@@ -14,25 +14,25 @@ for the next day.
 The server (at `server/`) is a Django project that hosts the logic of
 Acre's prediction capabilities. It includes the following Django apps:
 
-##### api
+#### api
 This is Acre's product interface, the predictions web API. It's full
 endpoints documentation is hosted on `/v1/docs`.
 
-##### algos
+#### algos
 The `api` passes prediction update and retrieval requests to the
 individual `algos` to process. Each algorithm (named after mathematicians, e.g.
 Euler) is characterized by the set of `datasource` it utilizes, and as a result,
 each algorithm is responsible for its own data transformation process.
 
-##### datasource
+#### datasource
 This is the app that integrates with all Acre's data source providers
 and persist all required raw data for `algos`.
 
-##### core
+#### core
 This is Acre's shared utility app with convenience functions covering
 areas such as date, time and mathematical calculations.
 
-##### scripts
+#### scripts
 These are utility scripts that seed some necessary data for Acre.
 
 ### The Web Client

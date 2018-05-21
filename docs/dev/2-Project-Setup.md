@@ -30,7 +30,7 @@
     - `virtualenv env --python=python3.4`
     - `. env/bin/activate`
 - Install everything you need: `pip install -r requirements.txt`.
-- Set up your local environment variable according to [here](docs/dev/2-Environment-Variables.md).
+- Set up your local environment variable according to [here](./Environment-Variables.md#local).
 - Catch up on your database schema: `./manage.py migrate`.
 - To run all tests, do `./manage.py test`.
 - To run all tests with coverge, do `coverage run manage.py test`, and access

@@ -19,7 +19,7 @@ AWS_SECRET_ACCESS_KEY=<your-aws-secret-access-key>
 TOKEN_GAME=<your-oanda-game-environment-token>
 ```
 
-### Acre Server
+### Server
 On Acre's application server, the following are required:
 ```
 ACRE_ENV=DEV or PROD

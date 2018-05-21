@@ -25,4 +25,4 @@ bid price at the start of the day.
 To use Acre's prediction service, please refer to Acre's API documentation [here](http://api-dev.acre.one/v1/docs)
 
 ## Contribute
-To contribute to Acre, please refer to the developer documentation [here](docs/dev/0-Project-Structure.md).
+To contribute to Acre, please refer to the developer documentation [here](docs/dev/Getting-Started.md).

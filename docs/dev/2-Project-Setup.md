@@ -1,9 +1,7 @@
 # Project Setup
 
 ### Dependencies
-- Python `3.4.8`: Installation guide [here](https://www.python.org/downloads/).
-- Python `3.6.5`: Installation guide [here](https://www.python.org/downloads/).
-- PostgresSQL `9.5` or `9.6`: You likely already have it. Check `psql --version`.
+- `nix`: Download from [here](https://nixos.org/nix/download.html)
 - An OANDA practice account:
     - Go [here](https://www.oanda.com/register/#/sign-up/demo) and sign up for a practice account.
     - Then log in from [here](https://trade.oanda.com/), selecting 'Practice'
@@ -17,6 +15,7 @@
     - `npm install -g npm@5.6.0`
 
 ### Database
+- Right under `Acre` run `nix-shell acre.nix` to go into the nix shell for the following:
 - `$ sudo -u postgres psql` to log in to the DB shell.
 - `postgres=# CREATE DATABASE acre;`
 - `postgres=# CREATE USER acreuser WITH PASSWORD 'acrelocaldb';`
@@ -25,6 +24,7 @@
 - `postgres=# \q` to quit the DB shell.
 
 ### Server
+- Right under `Acre` run `nix-shell acre.nix` to go into the nix shell for the following:
 - Make sure you have `virtualenv`. If not, do `pip3 install virtualenv`
 - Under `server` folder, go to your virtual environment by doing:
     - `virtualenv env --python=python3.4`
@@ -39,13 +39,14 @@ the coverage report at `coverage report` or `coverage html`.
 going to `localhost:8000/v1/docs` on your browser to see the API documentation.
 
 ### Lambda
-- Go through the same virtualenv setup as the server, but with python 3.6:
+- Right under `Acre` run `nix-shell acre.nix` to go into the nix shell for the following:
 - Under `lambda` folder do:
-    - `virtualenv env --python=python3.6`
+    - `virtualenv env --python=python3.4`
     - `. env/bin/activate`
     - `pip install -r requirements.txt`
 
 ### Client
+- Get out of the `nix` shell by simply typing `exit` if you were in.
 - The client site is a single page Elm app.
 - Under `client` folder do:
     - `npm install` will install all dependencies.
